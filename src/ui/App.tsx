@@ -1,9 +1,11 @@
-import EditorPage from './pages/editorPage';
+// import EditorPage from './pages/editorPage';
+import HomePage from './pages/homePage';
 
 function App() {
-  return (
-    
-     <EditorPage></EditorPage>
+  return (<>
+    <HomePage></HomePage>
+     {/* <EditorPage></EditorPage> */}
+     </>
   );
 }
 
