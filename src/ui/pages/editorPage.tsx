@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import LabXEditor from '../components/editor';
 import LabXTerminal from '../components/terminal';
 import { Rnd } from 'react-rnd';
+import { 
+    defaultRndSize, 
+    enableResizingOptions, 
+    handleOpenTerminal, 
+    handleRndResize, 
+    handleScreenResize, 
+    rndSize } from '../utils/editoPageUtils';
 
 const EditorPage = () => {
 
@@ -9,16 +16,10 @@ const EditorPage = () => {
     const[terminalWidth, setTerminalWidth] = useState<number>(window.innerWidth * 0.5)
     const[editorWidth, setEditorWidth] = useState<number>(window.innerWidth)
 
+    //Responsible for closing and opeing terminal
     useEffect(() => {
         const openTerminal = (event : KeyboardEvent) : void => {
-            if((event.ctrlKey || event.metaKey) && event.key == 'k'){
-                event.preventDefault()
-                if(showTerminal)
-                    setEditorWidth(editorWidth + terminalWidth)
-                else
-                    setEditorWidth(editorWidth - terminalWidth)
-                setShowTerminal(term => ! term)
-            }
+           handleOpenTerminal(event, setEditorWidth, setShowTerminal, editorWidth, terminalWidth, showTerminal)
         }
 
         window.addEventListener('keydown', openTerminal)
@@ -26,57 +27,29 @@ const EditorPage = () => {
         return () => {
             window.removeEventListener('keydown', openTerminal);
         }
-    }, [showTerminal])
+    }, [showTerminal, terminalWidth, editorWidth])
 
-
+    //Responsible for editor and terminal size when the screen size changes
     useEffect(() => {
+        window.addEventListener('resize', () => handleScreenResize(setEditorWidth, setTerminalWidth, setShowTerminal))
 
-        const handelWindowResize = () => {
-            const newWidth = window.innerWidth;
-            
-            setEditorWidth(newWidth)
-            setTerminalWidth(newWidth * 0.5)
-            setShowTerminal(false)
-        }
-        
-        window.addEventListener('resize', handelWindowResize)
+        return () => window.removeEventListener('resize', () => handleScreenResize(setEditorWidth, setTerminalWidth, setShowTerminal))
 
-        return () => window.removeEventListener('resize', handelWindowResize)
-
-    }, [])
+    }, [editorWidth, terminalWidth])
 
     return (
         <div className="flex h-screen gap-6 w-screen">
+
+                {/* Editor */}
                 <Rnd
-                    default={{
-                        x : 0,
-                        y :  0,
-                        height : '100%',
-                        width : editorWidth
-                    }}
-                    size={{
-                        width: editorWidth,
-                        height: '100%',
-                    }}
+                    default={defaultRndSize(editorWidth)}
+                    size={rndSize(editorWidth)}
                     minWidth={400}
                     maxWidth={showTerminal ? window.innerWidth-300 : window.innerWidth - 5}
-                    onResize={(_e, _dir, ref, _delta, _position) => {
-                        const newEditorWidth : number = ref.offsetWidth;
-                        const newTerminalWidth : number = window.innerWidth - newEditorWidth
-                        setEditorWidth(newEditorWidth)
-                        setTerminalWidth(newTerminalWidth)
-                    }}
+                    onResize={(e, dir, ref, delta, position) => 
+                        handleRndResize(e, dir, ref, delta, position, setEditorWidth, setTerminalWidth)}
                     disableDragging
-                    enableResizing = {{
-                        top:false,
-                        bottom:false,
-                        left : false,
-                        right : showTerminal,
-                        bottomLeft : true,
-                        bottomRight : true,
-                        topLeft : true,
-                        topRight : true
-                    }}
+                    enableResizing = {enableResizingOptions(showTerminal)}
                     className='hide-scrollbar'
                 >
                     <div className='h-full w-full border border-green-500'>
@@ -84,12 +57,12 @@ const EditorPage = () => {
                     </div>
                 </Rnd>
 
+                {/* Terminal */}
                 {showTerminal && 
                     <div className="h-full absolute top-0 -right-0 overflow-hidden" 
                         style={{width : terminalWidth}}>
                         <LabXTerminal />
-                    </div>
-                }
+                    </div>}
         </div>
     );
 };
