@@ -1,8 +1,11 @@
-import { app, BrowserWindow } from "electron";
-import path from "path"
+import { app, BrowserWindow, ipcMain } from "electron";
 import { Window } from "./window.js";
 
 
-app.on('ready', () => 
-    Window(app)
-)
+app.on('ready', () => {
+
+    ipcMain.on('terminal-input', (event, input) => {
+        console.log(input)
+    })
+    Window(app)   
+})

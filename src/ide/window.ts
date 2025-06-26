@@ -1,17 +1,26 @@
 import { App, BrowserWindow } from "electron";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+// import path from "node:pa"
 
 export const Window = (app : App) => {
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+
     const win : BrowserWindow = new BrowserWindow({
         minWidth : 300,
         minHeight : 300,
-        show : false
+        show : false,
+        webPreferences : {
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true,
+            contextIsolation: true        
+        }
     })
 
     win.loadURL("http://localhost:5173/")
-    // const __filename = fileURLToPath(import.meta.url);
-    // const __dirname = dirname(__filename);
+ 
     // win.loadFile(path.join(__dirname, '../dist-ui/index.html'))
     
     win.once('ready-to-show', () => {
