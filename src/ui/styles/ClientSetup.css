@@ -1,0 +1,79 @@
+.joinroom-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+background: linear-gradient(-135deg, #2c2c2c 50%, #070606 100%);
+
+  font-family: monospace;
+}
+
+.joinroom-box {
+  background-color: #2c2c2c;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.logo-section {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.logo-text {
+  font-family: 'Geostar Fill', cursive;
+   font-size: 36px;
+  color: white;
+  font-weight: bold;
+}
+
+.logo-dot {
+  width: 30px;
+  height: 30px;
+  background-color: rgb(255, 17, 0);
+  border-radius: 50%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.form-group input {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #d3d3d3;
+  color: #000;
+  font-size: 14px;
+}
+
+.join-button {
+  width: 100%;
+  background-color: #28a745;
+  color: white;
+  padding: 12px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.join-button:hover {
+  background-color: #218838;
+}
