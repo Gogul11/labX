@@ -1,9 +1,9 @@
-import { App, BrowserWindow } from "electron";
+import { type App, BrowserWindow } from "electron";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 // import path from "node:pa"
 
-export const Window = (app : App) => {
+export const Window = (_app : App) => {
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
@@ -27,7 +27,6 @@ export const Window = (app : App) => {
         win.show()
     })
 
-    
 
-    // return win;
+    return win;
 }
