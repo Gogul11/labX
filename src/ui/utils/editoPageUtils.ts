@@ -10,6 +10,7 @@ export const handleOpenTerminal = (
 ) : void => {
      if((event.ctrlKey || event.metaKey) && event.key == 'k'){
         event.preventDefault()
+        window.electronApi.startTerminal()
         if(showTerminal)
             setEditorWidth(editorWidth + terminalWidth)
         else
@@ -24,7 +25,7 @@ export const handleScreenResize = (
     setTerminalWidth : (width : number) => void,
     setShowTerminal : (show : boolean) => void
 ) : void => {
-
+        window.electronApi.startTerminal()
     const newWidth = window.innerWidth;
     setEditorWidth(newWidth * 0.5)
     setTerminalWidth(newWidth * 0.5)

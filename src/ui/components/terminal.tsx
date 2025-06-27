@@ -12,6 +12,7 @@ const LabXTerminal: React.FC = () => {
 
   const input = useRef<string>("")
   const cursor = useRef<number>(0)
+  
 
   useEffect(() => {
     if(terminalParent.current){
@@ -37,13 +38,11 @@ const LabXTerminal: React.FC = () => {
 
   }, [])
 
-  // useEffect(() => {
-  //         window.electronApi.receiveOutput((data : string) => {
-  //           terminal.current?.write('\x1b[2K');
-  //           terminal.current?.write('\r');
-  //           terminal.current?.write(data)
-  //         })
-  // }, [])
+  useEffect(() => {
+          window.electronApi.receiveOutput((data : string) => {
+                terminal.current?.write(data)
+          })
+  }, [])
 
   return(
     <div className="flex h-full w-full ">
