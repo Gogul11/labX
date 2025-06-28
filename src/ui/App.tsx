@@ -1,9 +1,13 @@
-import EditorPage from './pages/editorPage';
+// import EditorPage from './pages/editorPage';
+// import HomePage from './pages/homePage';
+import ClientRoom from './pages/clientSetup'
 
 function App() {
-  return (
-    
-     <EditorPage></EditorPage>
+  return (<>
+    {/* <HomePage></HomePage> */}
+     {/* <EditorPage></EditorPage> */}
+     <ClientRoom></ClientRoom>
+     </>
   );
 }
 

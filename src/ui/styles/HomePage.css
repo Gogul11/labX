@@ -1,0 +1,97 @@
+.homepage-container 
+{
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg, #2c2c2c 50%, #0f0f0f 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    position: relative;
+
+}
+
+
+/* .homepage-container {
+  background: linear-gradient(135deg, #1e1e1e 60%, #252525 100%);
+} */
+
+.footer {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+}
+
+
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.subtitle 
+{
+  color: #aaa;
+  font-size: 26px;
+  margin-top: 100px;
+  text-align: center;
+}
+.logo-text {
+  font-family: 'Geostar Fill', cursive;
+}
+
+.logo-dot {
+  width: 30px;
+  height: 30px;
+  background-color: rgb(255, 17, 0);
+  border-radius: 50%;
+}
+
+.logo-text {
+  font-size: 36px;
+  color: white;
+  font-weight: bold;
+}
+
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.btn {
+  width: 100%;
+  padding: 20px 0;
+  font-size: 24px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.host-btn {
+  background-color: #f2b632;
+  color: #000;
+}
+
+.join-btn {
+  background-color: #1a237e;
+  color: white;
+}
