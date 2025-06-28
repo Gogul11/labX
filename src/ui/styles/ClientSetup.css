@@ -1,0 +1,92 @@
+.joinroom-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(-135deg, #2c2c2c 50%, #070606 100%);
+
+  font-family: monospace;
+}
+
+.joinroom-box {
+  background-color: #343333;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 350px;
+    box-shadow: 30px 60px 15px rgba(0, 0, 0, 0.4);
+
+    display: flex;
+  flex-direction: column;
+  color: rgb(255, 255, 255);
+    width: 500px;
+  height: 500px;
+}
+
+.logo-section {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.logo-text {
+  font-family: 'Geostar Fill', cursive;
+   font-size: 36px;
+  color: white;
+  font-weight: bold;
+}
+
+.logo-dot {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(255, 17, 0);
+  border-radius: 50%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.8rem;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-size: 23px;
+}
+
+.form-group input {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background-color: #d0d0d0;
+  color: #000000;
+  font-size: 18px;
+}
+
+.join-button {
+  width: 100%;
+  background-color: #25b947;
+  color: white;
+  padding: 12px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+}
+
+.join-button:hover {
+  background-color: #166e29;
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  margin-bottom: -8px;
+}
