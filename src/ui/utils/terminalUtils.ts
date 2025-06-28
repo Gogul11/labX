@@ -26,23 +26,99 @@ export const handleTerminalRunTime = (
   cursor: React.RefObject<number>,
 ) => {
   const term = terminalRef.current;
-  if (!term) return;
+  if (!term || cursor.current === null || cursor.current < 0) return;
 
   // ENTER
   if (key === '\n' || domEvent.key === 'Enter') {
     term.write('\r\n');
-    console.log(input.current);
-    window.electronApi.sendInput(input.current)
+    window.electronApi.sendInput(input.current || '');
     input.current = '';
     cursor.current = 0;
     return;
   }
 
-  if (key.length === 1 && !domEvent.ctrlKey && !domEvent.metaKey) {
-    input.current += key
-    term.write(key)
+  // LEFT ARROW - move cursor left
+  if (domEvent.key === 'ArrowLeft') {
+    if (cursor.current > 0) {
+      term.write('\x1b[D'); // Move cursor left
+      cursor.current -= 1;
+    }
+    return;
+  }
+
+  // RIGHT ARROW - move cursor right
+  if (domEvent.key === 'ArrowRight') {
+    if (cursor.current < (input.current?.length || 0)) {
+      term.write('\x1b[C'); // Move cursor right
+      cursor.current += 1;
+    }
+    return;
+  }
+
+  // BACKSPACE - remove character before cursor
+  if ((key === '\b' || domEvent.key === 'Backspace') && input.current && input.current.length > 0) {
+    if (cursor.current === 0) return; // Beginning of input
+
+    // Update input string
+    input.current = 
+      input.current.substring(0, cursor.current - 1) + 
+      input.current.substring(cursor.current);
+
+    // Update terminal display
+    term.write('\x1b[D');  // Move cursor left
+    term.write('\x1b[P');  // Delete character at cursor
+    cursor.current -= 1;
+    return;
+  }
+
+  // DELETE KEY - remove character at cursor position
+  if (domEvent.key === 'Delete') {
+    if (input.current && cursor.current < input.current.length) {
+      // Update input string
+      input.current = 
+        input.current.substring(0, cursor.current) + 
+        input.current.substring(cursor.current + 1);
+
+      // Update terminal display
+      term.write('\x1b[P');  // Delete character at cursor
+      
+      // Redraw remaining characters after cursor
+      if (cursor.current < input.current.length) {
+        const remaining = input.current.substring(cursor.current);
+        term.write(remaining);
+        // Move cursor back to position
+        term.write(`\x1b[${remaining.length}D`);
+      }
+    }
+    return;
+  }
+
+  // PRINTABLE CHARACTERS
+  if (
+    key.length === 1 &&
+    key.charCodeAt(0) >= 32 &&
+    key.charCodeAt(0) < 127 &&
+    !domEvent.ctrlKey &&
+    !domEvent.metaKey
+  ) {
+    // Insert at cursor position
+    input.current = 
+      (input.current || '').substring(0, cursor.current) + 
+      key + 
+      (input.current || '').substring(cursor.current);
+
+    // Update terminal display
+    term.write(key);
+    
+    // If inserting in middle, redraw remaining characters
+    if (cursor.current < (input.current?.length || 0) - 1) {
+      const remaining = input.current.substring(cursor.current + 1);
+      term.write(remaining);
+      // Move cursor back to position after inserted char
+      term.write(`\x1b[${remaining.length}D`);
+    }
+    
     cursor.current += 1;
     return;
   }
-  
 };
