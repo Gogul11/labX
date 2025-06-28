@@ -1,0 +1,24 @@
+.client-folder-view {
+  flex: 1;
+  padding: 20px;
+  background-color: #222;
+  color: white;
+  overflow-y: auto;
+}
+
+.client-name-highlight {
+  color: #4aaaff;
+}
+
+.client-reg-highlight {
+  color: #dddd00;
+}
+
+.folder-name {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+ul {
+  padding-left: 20px;
+}

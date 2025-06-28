@@ -1,0 +1,69 @@
+.host-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #111;
+  color: white;
+}
+
+.header {
+  background-color: #222;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.red-dot {
+  width: 25px;
+  height: 25px;
+  background-color: red;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.room-info {
+  font-size: 16px;
+}
+
+.controls button {
+  margin-left: 10px;
+  background-color: #999;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar-container {
+  display: flex;
+  position: relative;
+  height: 100%;
+  background-color: #222;
+}
+
+.sidebar-resizer {
+  width: 5px;
+  cursor: ew-resize;
+  background-color: #444;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+
+.sidebar-resizer:hover {
+  background-color: #666;
+}
