@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import 'xterm/css/xterm.css'
+import { handleResize, handleTerminalRunTime, TerminalConfig } from "../utils/terminalUtils";
 
 const LabXTerminal: React.FC = () => {
 
@@ -9,48 +10,40 @@ const LabXTerminal: React.FC = () => {
   const terminal = useRef<Terminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null)
 
-  const[input, setInput] = useState("")
+  const input = useRef<string>("")
+  const cursor = useRef<number>(0)
+  
 
   useEffect(() => {
     if(terminalParent.current){
-
-      terminal.current = new Terminal({
-        cursorBlink : true,
-        fontFamily: 'monospace',
-        theme: {
-          background: '#1e1e1e',
-          foreground: '#ffffff'
-        },
-        cursorStyle : 'block',
-        cursorInactiveStyle:'block'
-      }) 
-      
+      terminal.current = new Terminal(TerminalConfig) 
       fitAddon.current = new FitAddon();
-
       terminal.current.loadAddon(fitAddon.current)
       terminal.current.open(terminalParent.current)
       fitAddon.current.fit();
-      terminal.current.writeln('Welcome to LabX Terminal\r\n');
-      terminal.current.write("$")
 
-      terminal.current.onData((data : string) => {
-        setInput(val => val + data)
-        terminal.current?.write(data)
-        console.log(input)
-      })
+      window.electronApi.startTerminal()
     }
 
-    const handleResize = () => {
-      fitAddon.current?.fit()
-    }
     
-    window.addEventListener('resize', handleResize)
+    terminal.current?.onKey(({ key, domEvent }) => {
+        handleTerminalRunTime(key, domEvent, terminal, input, cursor)
+    });
+
+    
+    window.addEventListener('resize', () => handleResize(fitAddon))
 
     return () => {
       terminal.current?.dispose();
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", () =>  handleResize(fitAddon));
     };
 
+  }, [])
+
+  useEffect(() => {
+          window.electronApi.receiveOutput((data : string) => {
+                terminal.current?.write(data)
+          })
   }, [])
 
   return(
