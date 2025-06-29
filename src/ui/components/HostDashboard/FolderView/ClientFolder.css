@@ -1,0 +1,42 @@
+.client-folder-view {
+  flex: 1;
+  padding: 20px;
+  background: linear-gradient(-135deg, #292828 50%, #0a0a0a 100%);
+
+  color: white;
+  overflow-y: auto;
+  
+}
+
+.client-name-highlight {
+  color: #4aaaff;
+  font-size: 27px;
+  margin: 10px 15px 10px 10px;
+  font-weight: bold;
+
+}
+
+.client-reg-highlight {
+  color: #dddd00;
+  font-size: 25px;
+  font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+
+
+}
+
+.folder-name {
+  margin-top: 28px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.file-names
+{
+  font-size: 25px;
+
+}
+
+ul {
+  padding-left: 40px;
+}

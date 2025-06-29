@@ -8,6 +8,7 @@ export const Window = (_app : App) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
 
+
     const win : BrowserWindow = new BrowserWindow({
         minWidth : 300,
         minHeight : 300,
@@ -18,7 +19,7 @@ export const Window = (_app : App) => {
             contextIsolation: true        
         }
     })
-
+    
     // win.loadURL("http://localhost:5173/")
  
     win.loadFile(path.join(__dirname, '../dist-ui/index.html'))

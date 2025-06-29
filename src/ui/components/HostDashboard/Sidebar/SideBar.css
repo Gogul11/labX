@@ -1,0 +1,71 @@
+.sidebar {
+  flex: 1; 
+  background: linear-gradient(135deg, #383838 50%, #0f0f0f 100%);
+  color: rgb(255, 255, 255);
+  border-right: 2px solid #000;
+  padding: 10px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.sidebar-header {
+  font-size: 22px;
+  margin-bottom: 10px;
+  background: #04ff9a;
+  padding: 5px;
+  color: rgb(0, 0, 0);
+  font-family: monospace;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+
+}
+
+.client-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.client-item {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+  gap: 10px;
+  font-size: 20px;
+}
+
+.client-item.active {
+  background-color: rgb(30, 30, 30);
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.client-status .status-dot {  
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.online {
+  background-color: #00ff00;
+}
+
+.status-dot.offline {
+  background-color: #888;
+}
+
+.client-index {
+  width: 25px;
+  margin-left: 10px;
+}
+
+.client-name,
+.client-reg {
+  flex-grow: 1;
+}
+
