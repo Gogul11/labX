@@ -2,8 +2,11 @@
 
 *{
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+}
+
+button:hover{
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
 /* global.css */
