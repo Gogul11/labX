@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BsCollection } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
 import { GoTerminal } from "react-icons/go";
