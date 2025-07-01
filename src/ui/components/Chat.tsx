@@ -1,20 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styles/Chat.css";
+import type { ChatSidebarProps, Message } from "../types/types";
 
-interface Message {
-  id: string;
-  sender: string;
-  content: string;
-  isSelf: boolean;
-}
-
-interface ChatSidebarProps {
-  username: string;
-  messages: Message[];
-  onSend: (message: string) => void;
-}
-
-const ChatSidebar: React.FC<ChatSidebarProps> = ({ username, messages, onSend }) => {
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ username }) => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "1",
+      sender: "Alice",
+      content: "Hello, everyone!",
+      isSelf: false,
+    },
+    {
+      id: "2",
+      sender: username,
+      content: "Hi Alice",
+      isSelf: true,
+    },
+  ]);
   const [input, setInput] = useState("");
   const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -22,20 +24,10 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ username, messages, onSend })
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = () => {
-    if (input.trim()) {
-      onSend(input.trim());
-      setInput("");
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") handleSend();
-  };
 
   return (
     <div className="chat-sidebar">
-      <div className="chat-header">💬 Chat</div>
+      <div className="chat-header">Chat</div>
 
       <div className="chat-messages">
         {messages.map((msg) => (
@@ -56,9 +48,9 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ username, messages, onSend })
           placeholder="Type a message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyPress}
+
         />
-        <button onClick={handleSend}>➤</button>
+        <button>➤</button>
       </div>
     </div>
   );
