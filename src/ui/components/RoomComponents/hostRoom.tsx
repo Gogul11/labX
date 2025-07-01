@@ -8,10 +8,16 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
   const [name, setName] = useState("");
   const [roomId, setRoomId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const generatedRoomId = "ABC123"; 
+    if (!name.trim()) {
+      setError("Room Name is required.");
+      return;
+    }
+    setError("");
+    const generatedRoomId = "ABC123";
     setRoomId(generatedRoomId);
     onSubmit({ name });
   };
@@ -29,11 +35,13 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
       {!roomId ? (
         <form onSubmit={handleSubmit} className="room-form">
           <input
-            placeholder="Name"
+            type="text"
+            placeholder="Room Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            required
+            className={error ? "invalid" : ""}
           />
+          {error && <span className="error-msg">{error}</span>}
           <button type="submit">Host</button>
         </form>
       ) : (
