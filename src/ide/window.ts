@@ -10,8 +10,10 @@ export const Window = (_app : App) => {
 
 
     const win : BrowserWindow = new BrowserWindow({
-        minWidth : 300,
-        minHeight : 300,
+        minWidth : 700,
+        minHeight : 700,
+        width : 900,
+        height : 900,
         show : false,
         webPreferences : {
             preload: path.join(__dirname, 'preload.js'),
@@ -20,9 +22,9 @@ export const Window = (_app : App) => {
         }
     })
     
-    // win.loadURL("http://localhost:5173/")
+    win.loadURL("http://localhost:5173/")
  
-    win.loadFile(path.join(__dirname, '../dist-ui/index.html'))
+    // win.loadFile(path.join(__dirname, '../dist-ui/index.html'))
     
     win.once('ready-to-show', () => {
         win.show()
