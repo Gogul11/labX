@@ -1,7 +1,15 @@
+type FileItem = {
+  name: string;
+  path: string;
+  isDir: boolean;
+};
+
 export interface apiType {
-sendInput: (msg: string) => void;
-receiveOutput : (func : (data : string) => void) => void;
-startTerminal : () => void
+    sendInput: (msg: string) => void;
+    receiveOutput : (func : (data : string) => void) => void;
+    startTerminal : () => void,
+    readDir: (path: string) => Promise<FileItem[]>,
+    openDir : () => Promise<string>,
 }
 
 declare global {
