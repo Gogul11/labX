@@ -10,6 +10,8 @@ export interface apiType {
     startTerminal : () => void,
     readDir: (path: string) => Promise<FileItem[]>,
     openDir : () => Promise<string>,
+    createFile : (path : object) => void,
+    createFolder : (path : object) => void
 }
 
 declare global {

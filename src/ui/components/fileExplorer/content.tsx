@@ -4,12 +4,14 @@ import { FaFolderClosed } from "react-icons/fa6";
 type FileNode = {
     name: string;
     isDir: boolean;
-    toogle : () => void
+    toogle : () => void;
+    select : (path : {val : string, isDir : boolean}) => void,
+    path : string
 };
 
 const Content = (props : FileNode) => {
     return (
-        <div className='hover:bg-[#abb2bf]/10 cursor-pointer w-full '>
+        <div className='hover:bg-[#abb2bf]/10 cursor-pointer w-full' onClick={() => props.select({val : props.path, isDir : props.isDir})}>
             <div 
                 className="flex w-[80%] min-h-6 mx-2 gap-2 items-center py-2"
                 onClick={props.toogle}
