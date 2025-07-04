@@ -43,18 +43,18 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
       />
       {error && <span className="error-msg">{error}</span>}
 
-      <label style={{ fontSize: "16px", display: "flex", alignItems: "center", gap: "10px" }}>
+      <label className="allow-chat">
+        Allow Chat
         <input
           type="checkbox"
           checked={allowChat}
           onChange={(e) => setAllowChat(e.target.checked)}
           disabled={!!roomId}
         />
-        Allow Chat
       </label>
 
       {!roomId && (
-        <button type="submit">
+        <button type="submit" className="host-btn" >
           Host
         </button>
       )}

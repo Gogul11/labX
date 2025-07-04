@@ -76,7 +76,7 @@ const JoinRoomForm: React.FC<Props> = ({ onSubmit }) => {
         {!isRoomIdValid && touched.roomId && <div className="error-msg">Required</div>}
       </div>
 
-      <button type="submit" disabled={!isFormValid}>
+      <button type="submit" disabled={!isFormValid} className="join-btn">
         Join
       </button>
     </form>

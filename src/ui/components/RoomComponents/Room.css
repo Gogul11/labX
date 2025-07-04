@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #b7b7b7;
+  background: linear-gradient(-135deg, #353535 50%, #101010 100%);
 }
 
 .tab-toggle {
@@ -18,27 +18,27 @@
   flex: 1;
   padding: 10px;
   cursor: pointer;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+  background-color: #ffffff;
+  border: 1px solid #807272;
   border-radius: 6px;
   font-size: 18px;
   font-weight: 600;
   transition: all 0.25s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
 }
 
 .tab-toggle button:hover {
-  background-color: #e0f0ff;
-  border-color: #007acc;
-  color: #007acc;
+  background-color: #c8c7c7;
+  border-color: #2f2323;
+  color: #ffffff;
 }
 
 .tab-toggle button.active {
-  background-color: #007acc;
+  background-color: #622d2d;
   color: white;
   transform: scale(1.05);
-  border: 1px solid #005fa3;
-  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.25);
+  border: 1px solid #ffaa0c;
+  box-shadow: 0 5px 10px rgba(255, 204, 0, 0.875);
 }
 
 .form-section {
@@ -73,11 +73,12 @@
   outline: none;
 }
 
-.room-form button {
-  background-color: #007acc;
+.host-btn, .join-btn {
+  background-color: #2b0cb5;
   color: white;
   padding: 12px;
   font-weight: bold;
+  margin-top: 10px;
   font-size: 20px;
   border: none;
   border-radius: 6px;
@@ -85,16 +86,25 @@
   transition: background-color 0.25s ease;
 }
 
-.room-form button:hover {
+.host-btn:hover, .join-btn:host {
   background-color: #005fa3;
 }
 
 .room-hosted {
+  margin-top: 30px;
   padding: 16px;
-  background-color: #eef9ff;
+  background-color: #4f4747;
   border-radius: 8px;
   text-align: center;
   animation: fadeIn 0.3s ease-in-out;
+  color: white;
+  font-size: 19px;
+}
+
+.room-hosted h3
+{
+  color: rgb(1, 227, 1);
+  font-weight: bolder;
 }
 
 @keyframes fadeIn {
@@ -117,25 +127,29 @@
 }
 
 .room-id-display {
-  font-size: 1.4em;
+  font-size: 1.2em;
   font-weight: bold;
-  background: #007acc;
-  color: white;
+  color: rgb(89, 255, 12);
   padding: 10px 18px;
   border-radius: 8px;
   letter-spacing: 1px;
-  box-shadow: 0 2px 6px rgba(0, 122, 204, 0.3);
+  box-shadow: 0 0 10px rgba(1, 250, 101, 0.535);
+  font-family: monospace;
+  background-color: #2e282857;
+
 }
 
 .copy-button {
   padding: 10px 14px;
   border: none;
-  background-color: #00b894;
+  background-color: #15a98b;
   color: white;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.25s ease, transform 0.1s ease;
+  font-size: 15px;
+  font-family: monospace;
 }
 
 .copy-button:hover {
@@ -154,7 +168,54 @@ input.invalid {
 
 .error-msg {
   font-size: 13px;
-  color: #e74c3c;
+  color: #ff1900;
   margin-top: 2px;
   margin-bottom: 1px;
+  
 }
+
+
+.allow-chat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-family: monospace;
+  color: #ffffff;
+  margin-top: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.allow-chat input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #00ff00; 
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.allow-chat input[type="checkbox"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+.start-btn:hover {
+  background-color: #740400;
+}
+
+.start-btn {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #b30000;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
