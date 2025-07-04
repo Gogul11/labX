@@ -1,11 +1,12 @@
 import { useState } from "react";
 
 type Props = {
-  onSubmit: (data: { name: string }) => void;
+  onSubmit: (data: { name: string; allowChat: boolean }) => void;
 };
 
 const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
   const [name, setName] = useState("");
+  const [allowChat, setAllowChat] = useState(true);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
@@ -19,7 +20,7 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
     setError("");
     const generatedRoomId = "ABC123";
     setRoomId(generatedRoomId);
-    onSubmit({ name });
+    onSubmit({ name, allowChat });
   };
 
   const copyToClipboard = async () => {
@@ -31,32 +32,52 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
   };
 
   return (
-    <div>
-      {!roomId ? (
-        <form onSubmit={handleSubmit} className="room-form">
-          <input
-            type="text"
-            placeholder="Room Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className={error ? "invalid" : ""}
-          />
-          {error && <span className="error-msg">{error}</span>}
-          <button type="submit">Host</button>
-        </form>
-      ) : (
-        <div className="room-hosted">
-          <h3>Room Hosted Successfully!</h3>
-          <p>Share this Room ID with others:</p>
-          <div className="copy-room-id">
-            <code className="room-id-display">{roomId}</code>
-            <button onClick={copyToClipboard} className="copy-button">
-              {copied ? "Copied!" : "Copy"}
-            </button>
-          </div>
-        </div>
+    <form onSubmit={handleSubmit} className="room-form">
+      <input
+        type="text"
+        placeholder="Room Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className={error ? "invalid" : ""}
+        disabled={!!roomId}
+      />
+      {error && <span className="error-msg">{error}</span>}
+
+      <label style={{ fontSize: "16px", display: "flex", alignItems: "center", gap: "10px" }}>
+        <input
+          type="checkbox"
+          checked={allowChat}
+          onChange={(e) => setAllowChat(e.target.checked)}
+          disabled={!!roomId}
+        />
+        Allow Chat
+      </label>
+
+      {!roomId && (
+        <button type="submit">
+          Host
+        </button>
       )}
-    </div>
+
+      {roomId && (
+        <>
+          <div className="room-hosted">
+            <h3>Room Hosted Successfully!</h3>
+            <p>Share this Room ID with others:</p>
+            <div className="copy-room-id">
+              <code className="room-id-display">{roomId}</code>
+              <button onClick={copyToClipboard} className="copy-button">
+                {copied ? "Copied!" : "Copy"}
+              </button>
+            </div>
+          </div>
+
+          <button type="button" className="start-btn">
+            Start Room
+          </button>
+        </>
+      )}
+    </form>
   );
 };
 
