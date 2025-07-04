@@ -1,4 +1,4 @@
-import { app , ipcMain } from "electron";
+import { app, dialog, ipcMain } from "electron";
 import { Window } from "./window.js";
 import { initiateTerminal } from "./terminal.js";
 import { type IPty } from "node-pty";
@@ -8,7 +8,7 @@ import path from "path";
 app.on('ready', () => {
 
     const ptyProcess : IPty = initiateTerminal()
-    const win = Window(app)  
+    const win =  Window(app)  
     let currInput :string;
     ipcMain.on('terminal-input', (_event, input) => {
         currInput = input;
