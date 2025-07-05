@@ -1,9 +1,10 @@
-import { app, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, Menu } from "electron";
 import { Window } from "./window.js";
 import { initiateTerminal } from "./terminal.js";
 import { type IPty } from "node-pty";
 import fs from 'fs'
 import path from "path";
+import { contextMenuItems } from "./utils.js";
 
 app.on('ready', () => {
 
@@ -49,7 +50,7 @@ app.on('ready', () => {
     //For opening a dir
     ipcMain.handle('open-dir', async (event) => {
         const result = await dialog.showOpenDialog(win, {
-            properties : ['openDirectory', 'openFile', 'showHiddenFiles']
+            properties : ['openDirectory', 'openFile']
         })
         if(!result.canceled && result.filePaths.length > 0)
             return result.filePaths[0]
@@ -78,6 +79,39 @@ app.on('ready', () => {
             fs.mkdirSync(newFolderPath)
         } catch (error) {
             console.log(error)
+        }
+    })
+
+
+
+    //For context menu
+    ipcMain.on('explorer-menu', (event, filePath) => {
+        console.log("right click pressed")
+        console.log(filePath)
+        const menu = Menu.buildFromTemplate(contextMenuItems(win, filePath))
+        const send = BrowserWindow.fromWebContents(event.sender)
+        if(send)
+            menu.popup({window : send})
+        else
+            menu.popup()
+    })
+
+    //For Renaming file or folder
+    ipcMain.on('rename-file-folder', (event, input : string, filePath : string) => {
+        const isDir : boolean = fs.statSync(filePath).isDirectory()
+        const dir = path.dirname(filePath)
+        const newName = path.join(dir, input)
+        try {
+            if(!isDir){
+                const ext = path.extname(filePath)
+                fs.renameSync(filePath, newName+ext)
+            }
+            else{
+                fs.renameSync(filePath, newName)
+
+            }
+        } catch (error) {
+            
         }
     })
 })
