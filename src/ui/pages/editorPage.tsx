@@ -49,9 +49,6 @@ const EditorPage = () => {
     setEditors((prev) => prev.filter((file) => file.id !== id));
   };
 
-  // --------------------
-  // Terminal State & Handlers
-  // --------------------
   const [terminals, setTerminals] = useState<Terminal[]>([
     { id: 't1', name: 'Terminal 1', isActive: true },
     { id: 't2', name: 'Terminal 2' }
@@ -125,13 +122,16 @@ const EditorPage = () => {
                     </div>}
                 
                 <div className='h-[4%] flex w-full absolute bottom-0 border border-red-600'>
-                    <div className='w-[50%] bg-fuchsia-600 h-full hide-scrollbar'>
+                    <div className='w-[47%] bg-pink-600 h-full hide-scrollbar'>
                          <OpenedEditors editors={editors}
                          onClickEditor={handleEditorClick}
                          onCloseEditor={handleEditorClose}/> 
                     </div>
-                    <div className='w-[50%] bg-indigo-600 h-full'>
-                        {/* <OpenedTerminals /> */}
+
+                    <div className='w-[6%] bg-fuchsia-600 h-full hide-scrollbar'>
+                    </div>
+
+                    <div className='w-[47%] bg-indigo-600 h-full'>
                         <OpenedTerminals 
                             terminals={terminals} 
                             onClickTerminal={handleTerminalClick} 
