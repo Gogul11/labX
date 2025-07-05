@@ -9,5 +9,9 @@ contextBridge.exposeInMainWorld('electronApi', {
     readDir : (path : string) => ipcRenderer.invoke('read-dir', path),
     openDir : () => ipcRenderer.invoke('open-dir'),
     createFile : (path : object) => ipcRenderer.send('create-file', path),
-    createFolder : (path : object) => ipcRenderer.send('create-folder', path)
+    createFolder : (path : object) => ipcRenderer.send('create-folder', path),
+    openFileExplorerMenu : (filePath : string) => ipcRenderer.send('explorer-menu', filePath),
+    newFileOrFolder : (func : (isDir : boolean) => void) => ipcRenderer.on('new-file-folder', (_event, isDir) => func(isDir)),
+    selectRenameFileOrFolder : (func : () => void) => ipcRenderer.on('select-rename-file-folder', (_event) => func()),
+    renameFileOrFolder : (name : string, filePath : string) => ipcRenderer.send('rename-file-folder', name, filePath)
 })

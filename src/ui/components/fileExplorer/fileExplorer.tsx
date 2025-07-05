@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Content from './content';
-import { fetchFolder, openFolder } from '../../utils/flileExplorer';
+import { fetchFolder,  openFolder } from '../../utils/flileExplorer';
 import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import { BiSend } from "react-icons/bi";
 
@@ -20,6 +20,8 @@ const FolderExplorer = () => {
 	const [input, setInput] = useState<{val : string, type : string}>({val : '', type : ''})
 	const [showInput, setShowInput] = useState<boolean>(false)
 	const [selectedPath, setSelectedPath] = useState<{val : string, isDir : boolean}>({val : '', isDir : false})
+	const [renameInput, setRenameInput] = useState<string>('')
+	const [rename, setRename] = useState<boolean>(false)
 
 	//Function for fetching files and folders from the directory NOTE : Don't touch this
   	const refresh = () => {
@@ -47,6 +49,14 @@ const FolderExplorer = () => {
 		refresh()
 	}
 
+	const handleRename = () => {
+		setRename(false)
+		window.electronApi.renameFileOrFolder(renameInput, selectedPath.val)
+		setFetch(true)
+		setRenameInput('')
+		refresh()
+	}
+
 	//Function for printing like tree structure NOTE : Don't touch this
 	const renderTree = (nodes: FileNode[], level = 0) =>
 	nodes.map((node) => (
@@ -68,6 +78,24 @@ const FolderExplorer = () => {
 			refresh()
 		}
 	}, [dir]);
+
+	useEffect(() => {
+		window.electronApi.newFileOrFolder((dir : boolean) => {
+			const createEle = document.getElementById('create-id')
+			createEle?.scrollIntoView({behavior : 'smooth'})
+			setShowInput(true)
+			if(dir)
+				setInput({...input, type : 'Folder'})
+			else
+				setInput({...input, type : 'File'})
+		})
+
+		window.electronApi.selectRenameFileOrFolder(() => {
+			const createEle = document.getElementById('create-id')
+			createEle?.scrollIntoView({behavior : 'smooth'})
+			setRename(true)
+		})
+	}, [])
 
 return (
     <div className=" h-full w-full">
@@ -93,8 +121,15 @@ return (
 				// A small loading for the folders with larger no of file like multiple react projects Example : sankar's vs code
 				<p className='text-[#61afef] text-center mt-10 text-lg font-bold'>Fetching files for you....</p>
 			) : (
-				<div className='flex-1 '>
-					<div className='h-8 flex items-center gap-4 px-4'>
+				<div 
+					className='flex-1 h-full'
+					onContextMenu={(e) => {
+                		if(e.button === 2)
+							window.electronApi.openFileExplorerMenu(selectedPath.val)
+						}
+					}	
+				>
+					<div id='create-id' className='h-8 flex items-center gap-4 px-4'>
 						<VscNewFile 
 							size={22} 
 							className=' text-[#98c379] cursor-pointer hover:text-[#c678dd]'
@@ -112,21 +147,36 @@ return (
 							}}
 						/>
 
-						{showInput && (
+						{(showInput || rename) && (
 							<div className='flex w-[70%] gap-4 items-center'>
 								<input 
 									type="text" 
-									value={input.val}
+									value={showInput ? input.val : renameInput}
 									className='bg-[#fff]/10 px-2 border border-[#c678dd] rounded-sm w-[97%] text-white'
-									onChange={(e) => setInput({...input, val : e.target.value})} 
+									onChange={(e) => {
+										if(showInput)
+											setInput({...input, val : e.target.value})
+										if(rename)
+											setRenameInput( e.target.value)
+									}} 
 									onKeyDown={(key) => {
-										if(key.key === 'Enter') handleCreation()
+										if(key.key === 'Enter'){
+											if(showInput)
+												handleCreation()
+											if(rename)
+												handleRename()
+										} 
 									}}
 								/>
 								<BiSend
 									size={22}
 									className=' text-[#98c379] cursor-pointer hover:text-[#c678dd]'
-									onClick={handleCreation}
+									onClick={() => {
+										if(showInput)
+											handleCreation()
+										if(rename)
+											handleRename()
+									}}
 								/>
 							</div>
 						)}

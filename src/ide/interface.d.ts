@@ -11,7 +11,11 @@ export interface apiType {
     readDir: (path: string) => Promise<FileItem[]>,
     openDir : () => Promise<string>,
     createFile : (path : object) => void,
-    createFolder : (path : object) => void
+    createFolder : (path : object) => void,
+    openFileExplorerMenu : (filePath : string) => void,
+    newFileOrFolder : (func : (isDir : boolean) => void) => void,
+    selectRenameFileOrFolder : (func : () => void) => void,
+    renameFileOrFolder : (input : string, filePath : string) => void
 }
 
 declare global {
