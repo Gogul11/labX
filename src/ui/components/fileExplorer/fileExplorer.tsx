@@ -3,6 +3,8 @@ import Content from './content';
 import { fetchFolder,  openFolder } from '../../utils/flileExplorer';
 import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import { BiSend } from "react-icons/bi";
+import { dirStore } from '../../stores/directoryStore';
+import { sideBarStore } from '../../stores/sideBarStore';
 
 type FileNode = {
   name: string;
@@ -15,13 +17,17 @@ type FileNode = {
 const FolderExplorer = () => {
   
 	const [tree, setTree] = useState<FileNode[]>([]);
-	const [dir, setDir] = useState<string>('')
 	const [fetch, setFetch] = useState<boolean>(false)
 	const [input, setInput] = useState<{val : string, type : string}>({val : '', type : ''})
 	const [showInput, setShowInput] = useState<boolean>(false)
 	const [selectedPath, setSelectedPath] = useState<{val : string, isDir : boolean}>({val : '', isDir : false})
 	const [renameInput, setRenameInput] = useState<string>('')
 	const [rename, setRename] = useState<boolean>(false)
+
+	//stores
+	const globalDir = dirStore((state) => state.setDir)
+	const dir = dirStore((state) => state.dir)
+	const closeSideBar = sideBarStore((state) => state.toggle)
 
 	//Function for fetching files and folders from the directory NOTE : Don't touch this
   	const refresh = () => {
@@ -80,11 +86,11 @@ const FolderExplorer = () => {
 	}, [dir]);
 
 	useEffect(() => {
-		window.electronApi.newFileOrFolder((dir : boolean) => {
+		window.electronApi.newFileOrFolder((newDir : boolean) => {
 			const createEle = document.getElementById('create-id')
 			createEle?.scrollIntoView({behavior : 'smooth'})
 			setShowInput(true)
-			if(dir)
+			if(newDir)
 				setInput({...input, type : 'Folder'})
 			else
 				setInput({...input, type : 'File'})
@@ -110,7 +116,8 @@ return (
 					className='bg-[#e06c75] w-[70%] h-10 rounded-lg text-[#282c34] font-bold'
 					onClick={() => {
 						window.electronApi.openDir().then((d) => {
-							setDir(d)
+							globalDir(d)
+							closeSideBar()
 							setSelectedPath({isDir : true, val : d})
 						})
 					}}

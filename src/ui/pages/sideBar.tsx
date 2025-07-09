@@ -9,6 +9,7 @@ import Chat from '../components/Chat';
 // import EditorsOpened from '../components/opened/openedEditors';
 // import OpenedTerminals from '../components/opened/openedTerm';
 import FileExplorer from '../components/fileExplorer/fileExplorer';
+import { sideBarStore } from '../stores/sideBarStore';
 
 // Optional: enum for tab keys
 type Tab = 'files' | 'editor' | 'terminal' | 'chat' | 'connect';
@@ -38,8 +39,10 @@ const SideBar = () => {
     }
   };
 
+  const toogleSideBar = sideBarStore((state) => state.toggle)
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={toogleSideBar}>
       <div className="w-[350px] h-[90vh] bg-[#282c34] rounded-xl shadow-lg flex flex-col items-center">
         
         {/* Dynamic content area */}
