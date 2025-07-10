@@ -12,6 +12,7 @@ import {
     handleRndResize, 
     handleScreenResize, 
     rndSize } from '../utils/editoPageUtils';
+import { sideBarStore } from '../stores/sideBarStore';
 
 
 
@@ -20,12 +21,15 @@ const EditorPage = () => {
     const[showTerminal, setShowTerminal] = useState<boolean>(false)
     const[terminalWidth, setTerminalWidth] = useState<number>(window.innerWidth * 0.5)
     const[editorWidth, setEditorWidth] = useState<number>(window.innerWidth)
-  const [editors, setEditors] = useState<Editor[]>([
-    { id: '1', name: 'App.tsx', isModified: true },
-    { id: '2', name: 'editorPage.tsx', isModified: true, isActive: true },
-    { id: '3', name: 'window.ts' },
-    { id: '4', name: 'tsconfig.json' }
-  ]);
+    const [editors, setEditors] = useState<Editor[]>([
+      { id: '1', name: 'App.tsx', isModified: true },
+      { id: '2', name: 'editorPage.tsx', isModified: true, isActive: true },
+      { id: '3', name: 'window.ts' },
+      { id: '4', name: 'tsconfig.json' }
+    ]);
+
+    //stores
+    const toogleSideBar = sideBarStore((state) => state.toggle)
 
   const handleEditorClick = (id: string) => {
     setEditors((prev) =>
@@ -116,7 +120,10 @@ const EditorPage = () => {
                          onCloseEditor={handleEditorClose}/> 
                     </div>
 
-                    <div className='w-[6%] bg-fuchsia-600 h-full hide-scrollbar'>
+                    <div 
+                      className='w-[6%] bg-fuchsia-600 h-full hide-scrollbar'
+                      onClick={toogleSideBar}
+                    >
                     </div>
 
                     <div className='w-[47%] bg-indigo-600 h-full'>

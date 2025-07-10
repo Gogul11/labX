@@ -1,21 +1,16 @@
 import EditorPage from './pages/editorPage';
-// import SideBar from './pages/sideBar';
-// import HostRoom from "./pages/hostRoom";
-// import HostDashboard from "./components/HostDashboard/hostDashboard";
-// import HomePage from './pages/homePage';
-// import ClientRoom from './pages/clientSetup'
+import { sideBarStore } from './stores/sideBarStore';
+import SideBar from './pages/sideBar';
 
 
 function App() {
+
+  const sideBarIsOpen = sideBarStore((state) => state.isOpen)
+
   return (
     <>
-      {/* <HomePage></HomePage> */}
-      {/* <EditorPage></EditorPage> */}
-      {/* <HostRoom></HostRoom> */}
-      {/* <HostDashboard></HostDashboard> */}
       <EditorPage></EditorPage> 
-        {/* <SideBar></SideBar> */}
-      {/* <ClientRoom></ClientRoom> */}
+      {sideBarIsOpen && <SideBar></SideBar> }
     </>
   );
 }

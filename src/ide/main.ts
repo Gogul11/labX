@@ -114,7 +114,6 @@ app.on('ready', () => {
             }
             else{
                 fs.renameSync(filePath, newName)
-
             }
         } catch (error) {
             
