@@ -14,6 +14,7 @@ import {
     rndSize } from '../utils/editoPageUtils';
 import { sideBarStore } from '../stores/sideBarStore';
 import { currentPathStore } from '../stores/currentPathStore';
+import { EditorMapsStore } from '../stores/editorsMap';
 
 const EditorPage = () => {
 
@@ -35,6 +36,11 @@ const EditorPage = () => {
 
     //selectedPath store 
     const selectedPath = currentPathStore((state) => state.path)
+
+    // const openedEditors : Map<string, string> = new Map()
+    const openedEditors = EditorMapsStore((state) => state.openedEditors)
+    const setOpenedEditors = EditorMapsStore((state) => state.setOpenedEditors)
+    const toogleEditors = EditorMapsStore((state) => state.toogleEditors)
 
   const handleEditorClick = (id: string) => {
     setEditors((prev) =>
@@ -93,10 +99,11 @@ const EditorPage = () => {
 
     useEffect(() => {
       (async () => {
-        const res : {data : string, ext : string} = await window.electronApi.openFile(selectedPath);
+        const res : {data : string, ext : string, fileName : string} = await window.electronApi.openFile(selectedPath);
         setFileContent(res.data)
         setFileExt(res.ext)
-        console.log(res.ext)
+        setOpenedEditors(selectedPath, true, res.data)
+        toogleEditors(selectedPath)
       })();
     }, [selectedPath]);
 

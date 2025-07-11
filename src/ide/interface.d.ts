@@ -16,7 +16,7 @@ export interface apiType {
     newFileOrFolder : (func : (isDir : boolean) => void) => void,
     selectRenameFileOrFolder : (func : () => void) => void,
     renameFileOrFolder : (input : string, filePath : string) => void,
-    openFile : (path : stirng) => Promise<{data : string, ext : string}>
+    openFile : (path : stirng) => Promise<{data : string, ext : string, fileName : string}>
 }
 
 declare global {

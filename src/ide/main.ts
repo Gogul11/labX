@@ -126,10 +126,11 @@ app.on('ready', () => {
             if(filePath === '') return {data : '', ext : ''};
             const data : string = fs.readFileSync(filePath, 'utf-8')
             const ext : string = path.extname(filePath)
-            return { data, ext}
+            const fileName : string = path.basename(filePath)
+            return { data, ext, fileName}
         } catch (error) {
             console.log(error)
-            return { data : '', ext : ''}
+            return { data : '', ext : '', fileName : ''}
         }
     })
 })
