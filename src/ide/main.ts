@@ -133,4 +133,15 @@ app.on('ready', () => {
             return { data : '', ext : '', fileName : ''}
         }
     })
+
+    //Retrive file name
+    ipcMain.handle('get-file-name', async(event, filePath : string) => {
+        try {
+            if(filePath === '') return null
+            const filename : string = path.basename(filePath)
+            return filename
+        } catch (error) {
+            console.log(error)            
+        }
+    })
 })

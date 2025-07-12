@@ -21,36 +21,27 @@ const EditorPage = () => {
     const[showTerminal, setShowTerminal] = useState<boolean>(false)
     const[terminalWidth, setTerminalWidth] = useState<number>(window.innerWidth * 0.5)
     const[editorWidth, setEditorWidth] = useState<number>(window.innerWidth)
-    const [editors, setEditors] = useState<Editor[]>([
-      { id: '1', name: 'App.tsx', isModified: true },
-      { id: '2', name: 'editorPage.tsx', isModified: true, isActive: true },
-      { id: '3', name: 'window.ts' },
-      { id: '4', name: 'tsconfig.json' }
-    ]);
-
-    const [fileContent, setFileContent] = useState<string>("")
-    const [fileExt , setFileExt] = useState<string>("")
-
+    
     //stores
     const toogleSideBar = sideBarStore((state) => state.toggle)
 
     //selectedPath store 
     const selectedPath = currentPathStore((state) => state.path)
 
-    // const openedEditors : Map<string, string> = new Map()
+    //Editor related
     const openedEditors = EditorMapsStore((state) => state.openedEditors)
     const setOpenedEditors = EditorMapsStore((state) => state.setOpenedEditors)
     const toogleEditors = EditorMapsStore((state) => state.toogleEditors)
 
-  const handleEditorClick = (id: string) => {
-    setEditors((prev) =>
-      prev.map((file) => ({ ...file, isActive: file.id === id }))
-    );
-  };
+  // const handleEditorClick = (id: string) => {
+  //   setEditors((prev) =>
+  //     prev.map((file) => ({ ...file, isActive: file.id === id }))
+  //   );
+  // };
 
-  const handleEditorClose = (_e: React.MouseEvent, id: string) => {
-    setEditors((prev) => prev.filter((file) => file.id !== id));
-  };
+  // const handleEditorClose = (_e: React.MouseEvent, id: string) => {
+  //   setEditors((prev) => prev.filter((file) => file.id !== id));
+  // };
 
   const [terminals, setTerminals] = useState<Terminal[]>([
     { id: 't1', name: 'Terminal 1', isActive: true },
@@ -100,9 +91,9 @@ const EditorPage = () => {
     useEffect(() => {
       (async () => {
         const res : {data : string, ext : string, fileName : string} = await window.electronApi.openFile(selectedPath);
-        setFileContent(res.data)
-        setFileExt(res.ext)
-        setOpenedEditors(selectedPath, true, res.data)
+        // setFileContent(res.data)
+        // setFileExt(res.ext)
+        setOpenedEditors(selectedPath, true, res.data, res.ext)
         toogleEditors(selectedPath)
       })();
     }, [selectedPath]);
@@ -123,12 +114,16 @@ const EditorPage = () => {
                     enableResizing = {enableResizingOptions(showTerminal)}
                     className='hide-scrollbar'
                 >
-                    <div className='h-[96%] w-full border border-green-500'>
-                        <LabXEditor theme="vs-dark" 
-                          value={fileContent}
-                          ext={fileExt}
-                        />
-                    </div>
+                    {Object.entries(openedEditors).map(([path, vals]) => (
+                      vals.isOpen && 
+                      <div className='h-[96%] w-full border border-green-500'>
+                          <LabXEditor theme="vs-dark"
+                            key={path} 
+                            value={vals.data}
+                            ext={vals.ext}
+                          />
+                      </div>
+                    ))}
                 </Rnd>
 
                 {/* Terminal */}
@@ -140,9 +135,7 @@ const EditorPage = () => {
                 
                 <div className='h-[4%] flex w-full absolute bottom-0 border border-red-600'>
                     <div className='w-[47%] bg-pink-600 h-full hide-scrollbar'>
-                         <OpenedEditors editors={editors}
-                         onClickEditor={handleEditorClick}
-                         onCloseEditor={handleEditorClose}/> 
+                         <OpenedEditors editors={openedEditors}/> 
                     </div>
 
                     <div 

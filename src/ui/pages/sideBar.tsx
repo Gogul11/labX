@@ -66,7 +66,10 @@ const SideBar = () => {
           {/* <button onClick={() => setActiveTab('chat')}> */}
           <button onClick={() => {
               toogleSideBar()
-              console.log(openedEditors)
+              Object.entries(openedEditors).forEach(([key,val]) =>{
+                console.log(key)
+                console.log(val)
+              })
             }}>
             <BsFillChatRightDotsFill size={28} className={activeTab === 'chat' ? 'text-yellow-300' : ''} />
           </button>
