@@ -13,33 +13,35 @@ import {
     handleScreenResize, 
     rndSize } from '../utils/editoPageUtils';
 import { sideBarStore } from '../stores/sideBarStore';
-
-
+import { currentPathStore } from '../stores/currentPathStore';
+import { EditorMapsStore } from '../stores/editorsMap';
 
 const EditorPage = () => {
 
     const[showTerminal, setShowTerminal] = useState<boolean>(false)
     const[terminalWidth, setTerminalWidth] = useState<number>(window.innerWidth * 0.5)
     const[editorWidth, setEditorWidth] = useState<number>(window.innerWidth)
-    const [editors, setEditors] = useState<Editor[]>([
-      { id: '1', name: 'App.tsx', isModified: true },
-      { id: '2', name: 'editorPage.tsx', isModified: true, isActive: true },
-      { id: '3', name: 'window.ts' },
-      { id: '4', name: 'tsconfig.json' }
-    ]);
-
+    
     //stores
     const toogleSideBar = sideBarStore((state) => state.toggle)
 
-  const handleEditorClick = (id: string) => {
-    setEditors((prev) =>
-      prev.map((file) => ({ ...file, isActive: file.id === id }))
-    );
-  };
+    //selectedPath store 
+    const selectedPath = currentPathStore((state) => state.path)
 
-  const handleEditorClose = (_e: React.MouseEvent, id: string) => {
-    setEditors((prev) => prev.filter((file) => file.id !== id));
-  };
+    //Editor related
+    const openedEditors = EditorMapsStore((state) => state.openedEditors)
+    const setOpenedEditors = EditorMapsStore((state) => state.setOpenedEditors)
+    const toogleEditors = EditorMapsStore((state) => state.toogleEditors)
+
+  // const handleEditorClick = (id: string) => {
+  //   setEditors((prev) =>
+  //     prev.map((file) => ({ ...file, isActive: file.id === id }))
+  //   );
+  // };
+
+  // const handleEditorClose = (_e: React.MouseEvent, id: string) => {
+  //   setEditors((prev) => prev.filter((file) => file.id !== id));
+  // };
 
   const [terminals, setTerminals] = useState<Terminal[]>([
     { id: 't1', name: 'Terminal 1', isActive: true },
@@ -85,6 +87,17 @@ const EditorPage = () => {
         return () => window.removeEventListener('resize', () => handleScreenResize(setEditorWidth, setTerminalWidth, setShowTerminal))
 
     }, [editorWidth, terminalWidth])
+
+    useEffect(() => {
+      (async () => {
+        const res : {data : string, ext : string, fileName : string} = await window.electronApi.openFile(selectedPath);
+        // setFileContent(res.data)
+        // setFileExt(res.ext)
+        setOpenedEditors(selectedPath, true, res.data, res.ext)
+        toogleEditors(selectedPath)
+      })();
+    }, [selectedPath]);
+
     
     return (
         <div className="flex h-screen gap-6 w-screen">
@@ -101,23 +114,28 @@ const EditorPage = () => {
                     enableResizing = {enableResizingOptions(showTerminal)}
                     className='hide-scrollbar'
                 >
-                    <div className='h-[96%] w-full border border-green-500'>
-                        <LabXEditor theme="vs-dark"/>
-                    </div>
+                    {Object.entries(openedEditors).map(([path, vals]) => (
+                      vals.isOpen && 
+                      <div className='h-[96%] w-full border border-green-500'>
+                          <LabXEditor theme="vs-dark"
+                            key={path} 
+                            value={vals.data}
+                            ext={vals.ext}
+                          />
+                      </div>
+                    ))}
                 </Rnd>
 
                 {/* Terminal */}
                 {showTerminal && 
                     <div className="h-[96%] absolute top-0 -right-0 overflow-hidden"
                         style={{width : terminalWidth}}>
-                        <LabXTerminal />
+                        <LabXTerminal/>
                     </div>}
                 
                 <div className='h-[4%] flex w-full absolute bottom-0 border border-red-600'>
                     <div className='w-[47%] bg-pink-600 h-full hide-scrollbar'>
-                         <OpenedEditors editors={editors}
-                         onClickEditor={handleEditorClick}
-                         onCloseEditor={handleEditorClose}/> 
+                         <OpenedEditors editors={openedEditors}/> 
                     </div>
 
                     <div 

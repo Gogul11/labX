@@ -2,16 +2,20 @@ import { Editor } from '@monaco-editor/react';
 
 type propsType = {
   theme ?: string,
+  value : string,
+  ext : string
 }
 
-const LabXEditor : React.FC<propsType> = ({theme}) => {
+const LabXEditor : React.FC<propsType> = ({theme, value, ext}) => {
   return (
     <div className='h-[100%] w-[100%]'>
       <Editor
         height="100%"
         width="100%"
-        defaultLanguage="javascript"
-        defaultValue="// labX is live"
+        // defaultLanguage={ext}
+        // defaultValue="// labX is live"
+        language={ext}
+        value={value}
         theme={theme}
         options={{
           fontSize: 14,

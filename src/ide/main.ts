@@ -119,4 +119,29 @@ app.on('ready', () => {
             
         }
     })
+
+    //Opening a file
+    ipcMain.handle('open-file', async(event, filePath : string) => {
+        try {
+            if(filePath === '') return {data : '', ext : ''};
+            const data : string = fs.readFileSync(filePath, 'utf-8')
+            const ext : string = path.extname(filePath)
+            const fileName : string = path.basename(filePath)
+            return { data, ext, fileName}
+        } catch (error) {
+            console.log(error)
+            return { data : '', ext : '', fileName : ''}
+        }
+    })
+
+    //Retrive file name
+    ipcMain.handle('get-file-name', async(event, filePath : string) => {
+        try {
+            if(filePath === '') return null
+            const filename : string = path.basename(filePath)
+            return filename
+        } catch (error) {
+            console.log(error)            
+        }
+    })
 })
