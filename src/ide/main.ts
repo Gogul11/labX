@@ -121,7 +121,7 @@ app.on('ready', () => {
     })
 
     //Opening a file
-    ipcMain.handle('open-file', async(event, filePath : string) => {
+    ipcMain.handle('open-file', async(_event, filePath : string) => {
         try {
             if(filePath === '') return {data : '', ext : ''};
             const data : string = fs.readFileSync(filePath, 'utf-8')
@@ -135,7 +135,7 @@ app.on('ready', () => {
     })
 
     //Retrive file name
-    ipcMain.handle('get-file-name', async(event, filePath : string) => {
+    ipcMain.handle('get-file-name', async(_event, filePath : string) => {
         try {
             if(filePath === '') return null
             const filename : string = path.basename(filePath)
