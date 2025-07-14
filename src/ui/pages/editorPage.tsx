@@ -15,6 +15,7 @@ import {
 import { sideBarStore } from '../stores/sideBarStore';
 import { currentPathStore } from '../stores/currentPathStore';
 import { EditorMapsStore } from '../stores/editorsMap';
+import { openedTerminalStore } from '../stores/terminlasStore';
 
 const EditorPage = () => {
 
@@ -33,39 +34,8 @@ const EditorPage = () => {
     const setOpenedEditors = EditorMapsStore((state) => state.setOpenedEditors)
     const toogleEditors = EditorMapsStore((state) => state.toogleEditors)
 
-  // const handleEditorClick = (id: string) => {
-  //   setEditors((prev) =>
-  //     prev.map((file) => ({ ...file, isActive: file.id === id }))
-  //   );
-  // };
-
-  // const handleEditorClose = (_e: React.MouseEvent, id: string) => {
-  //   setEditors((prev) => prev.filter((file) => file.id !== id));
-  // };
-
-  const [terminals, setTerminals] = useState<Terminal[]>([
-    { id: 't1', name: 'Terminal 1', isActive: true },
-    { id: 't2', name: 'Terminal 2' }
-  ]);
-
-  const handleTerminalClick = (id: string) => {
-    setTerminals((prev) =>
-      prev.map((term) => ({ ...term, isActive: term.id === id }))
-    );
-  };
-
-  const handleTerminalClose = (_e: React.MouseEvent, id: string) => {
-    setTerminals((prev) => prev.filter((term) => term.id !== id));
-  };
-
-  const handleTerminalAdd = () => {
-    const nextIndex = terminals.length + 1;
-    const newId = `t${nextIndex}`;
-    setTerminals((prev) => [
-      ...prev.map((term) => ({ ...term, isActive: false })),
-      { id: newId, name: `Terminal ${nextIndex}`, isActive: true },
-    ]);
-  };
+    //terminals
+    const openedTerminals = openedTerminalStore((state) => state.openedTerminal)
 
     //Responsible for closing and opeing terminal
     useEffect(() => {
@@ -91,8 +61,6 @@ const EditorPage = () => {
     useEffect(() => {
       (async () => {
         const res : {data : string, ext : string, fileName : string} = await window.electronApi.openFile(selectedPath);
-        // setFileContent(res.data)
-        // setFileExt(res.ext)
         setOpenedEditors(selectedPath, true, res.data, res.ext)
         toogleEditors(selectedPath)
       })();
@@ -130,7 +98,10 @@ const EditorPage = () => {
                 {showTerminal && 
                     <div className="h-[96%] absolute top-0 -right-0 overflow-hidden"
                         style={{width : terminalWidth}}>
-                        <LabXTerminal/>
+                          {Object.entries(openedTerminals).map(([id, term]) => (
+                            term.isActive && <LabXTerminal key={id} />
+                        ))}
+
                     </div>}
                 
                 <div className='h-[4%] flex w-full absolute bottom-0 border border-red-600'>
@@ -145,11 +116,7 @@ const EditorPage = () => {
                     </div>
 
                     <div className='w-[47%] bg-indigo-600 h-full'>
-                        <OpenedTerminals 
-                            terminals={terminals} 
-                            onClickTerminal={handleTerminalClick} 
-                            onCloseTerminal={handleTerminalClose} 
-                            onAddTerminal={handleTerminalAdd}/>
+                        <OpenedTerminals />
                     </div>
                 </div>
         </div>

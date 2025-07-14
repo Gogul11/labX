@@ -6,9 +6,9 @@ const extensionToMonacoLanguageMap: Record<string, string> = {
   "scss": "scss",
   "less": "less",
   "js": "javascript",
-  "jsx": "javascriptreact",
+  "jsx": "javascript",
   "ts": "typescript",
-  "tsx": "javascriptreact",
+  "tsx": "typescript",
 
   // C/C++
   "c": "c",
