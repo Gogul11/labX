@@ -4,7 +4,9 @@ import { fetchFolder,  openFolder } from '../../utils/flileExplorer';
 import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import { BiSend } from "react-icons/bi";
 import { dirStore } from '../../stores/directoryStore';
-import { sideBarStore } from '../../stores/sideBarStore';
+import { dirListStore } from '../../stores/dirListStore';
+import { selectedPathStore } from '../../stores/selectedPathStore';
+// import { sideBarStore } from '../../stores/sideBarStore';
 
 type FileNode = {
   name: string;
@@ -16,18 +18,23 @@ type FileNode = {
 
 const FolderExplorer = () => {
   
-	const [tree, setTree] = useState<FileNode[]>([]);
+	// const [tree, setTree] = useState<FileNode[]>([]);
 	const [fetch, setFetch] = useState<boolean>(false)
 	const [input, setInput] = useState<{val : string, type : string}>({val : '', type : ''})
 	const [showInput, setShowInput] = useState<boolean>(false)
-	const [selectedPath, setSelectedPath] = useState<{val : string, isDir : boolean}>({val : '', isDir : false})
+	// const [selectedPath, setSelectedPath] = useState<{val : string, isDir : boolean}>({val : '', isDir : false})
 	const [renameInput, setRenameInput] = useState<string>('')
 	const [rename, setRename] = useState<boolean>(false)
-
+	
 	//stores
 	const globalDir = dirStore((state) => state.setDir)
 	const dir = dirStore((state) => state.dir)
-	const closeSideBar = sideBarStore((state) => state.toggle)
+	const tree = dirListStore((state) => state.dirList)
+	const setTree = dirListStore((state) => state.setDirList)
+
+	const selectedPath = selectedPathStore((state) => state.selectedPath)
+	const setSelectedPath = selectedPathStore((state) => state.setSelectedPath)
+	// const closeSideBar = sideBarStore((state) => state.toggle)
 
 	//Function for fetching files and folders from the directory NOTE : Don't touch this
   	const refresh = () => {
@@ -65,21 +72,21 @@ const FolderExplorer = () => {
 
 	//Function for printing like tree structure NOTE : Don't touch this
 	const renderTree = (nodes: FileNode[], level = 0) =>
-	nodes.map((node) => (
-		<div key={node.path} style={{ paddingLeft: level * 16 }}>
-		<Content 
-			isDir={node.isDir}
-			name={node.name}
-			toogle = {() => openFolder(node.path, setTree)}
-			select = {(p : typeof selectedPath) => setSelectedPath(p)}
-			path = {node.path}
-		/>
-		{node.isDir && node.children && node.isOpen && renderTree(node.children, level + 1)}
-		</div>
+		nodes.map((node) => (
+			<div key={node.path} style={{ paddingLeft: level * 16 }}>
+				<Content 
+					isDir={node.isDir}
+					name={node.name}
+					toogle = {() => openFolder(node.path, setTree, tree)}
+					select = {(p : typeof selectedPath) => setSelectedPath(p)}
+					path = {node.path}
+				/>
+				{node.isDir && node.children && node.isOpen && renderTree(node.children, level + 1)}
+			</div>
 	));
 
 	useEffect(() => {
-		if(dir !== ''){
+		if(dir !== '' && tree.length === 0){
 			setFetch(true)
 			refresh()
 		}
@@ -117,7 +124,7 @@ return (
 					onClick={() => {
 						window.electronApi.openDir().then((d) => {
 							globalDir(d)
-							closeSideBar()
+							// closeSideBar()
 							setSelectedPath({isDir : true, val : d})
 						})
 					}}

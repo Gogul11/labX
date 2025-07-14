@@ -17,7 +17,7 @@ export  const fetchFolder = async (dir: string): Promise<FileNode[]> => {
     return result;
 };
 
-export const openFolder = (path:string, setTree : React.Dispatch<React.SetStateAction<FileNode[]>>) => {
+export const openFolder = (path:string, setTree : (list : Array<FileNode>) => void, tree : Array<FileNode>) => {
       const updatedTree = (nodes : FileNode[]) : FileNode[] => {
           const newTree = nodes.map((node) => {
             if(node.path === path){
@@ -31,6 +31,6 @@ export const openFolder = (path:string, setTree : React.Dispatch<React.SetStateA
 
           return newTree
       }
-
-      setTree((prev : FileNode[]) => updatedTree(prev))
+      const newTree = updatedTree(tree)
+      setTree(newTree)
 }
