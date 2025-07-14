@@ -3,6 +3,7 @@ import './HostDashboard.css';
 import Sidebar from './Sidebar/sideBar';
 import ClientFolderView from './FolderView/clientFolder';
 import type { Client } from '../../types/types';
+import Editor from './Editor/EditorHost';
 
 const dummyClients: Client[] = [
   {
@@ -10,6 +11,7 @@ const dummyClients: Client[] = [
     name: 'Gogul',
     regNo: '2023115020',
     isOnline: true,
+    basePath: '/home/gogul', 
     folderStructure: [{ name: 'myFolder', files: ['Lab2.c', 'Lab3.c', 'Report.txt'] }]
   },
   {
@@ -17,6 +19,7 @@ const dummyClients: Client[] = [
     name: 'Mohan',
     regNo: '2023115026',
     isOnline: false,
+    basePath: '/home/mohan',
     folderStructure: [{ name: 'Lab_Assess', files: ['Task1.py'] }]
   },
   {
@@ -24,6 +27,7 @@ const dummyClients: Client[] = [
     name: 'Sankar',
     regNo: '2023115074',
     isOnline: true,
+    basePath: '/home/sankar', 
     folderStructure: [{name: 'my-work', files: ['Lab1.cpp', 'Lab2.cpp']}]
   }
 ];
@@ -94,6 +98,9 @@ const HostDashboard: React.FC = () => {
           </div>
         )}
         <ClientFolderView client={selectedClient} />
+        <div className='editor-view'> 
+          <Editor />
+        </div>
       </div>
     </div>  
   );
