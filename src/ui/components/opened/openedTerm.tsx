@@ -1,12 +1,6 @@
 import React from 'react';
 import { openedTerminalStore } from '../../stores/terminlasStore';
 
-interface Terminal {
-  id: string;
-  name: string;
-  isActive?: boolean;
-}
-
 
 const OpenedTerminalsBar: React.FC = () => {
 

@@ -4,6 +4,7 @@ export interface Client {
   regNo: string;
   folderStructure: Folder[];
   isOnline: boolean; 
+  basePath : string
 }
 
 export interface Folder {
