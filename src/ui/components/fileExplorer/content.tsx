@@ -2,6 +2,7 @@ import { FaFileCode } from "react-icons/fa6";
 import { FaFolderClosed } from "react-icons/fa6";
 import { currentPathStore } from "../../stores/currentPathStore";
 import { sideBarStore } from "../../stores/sideBarStore";
+import { ActivePathStore } from "../../stores/activePathStore";
 
 type FileNode = {
     name: string;
@@ -15,6 +16,7 @@ const Content = (props : FileNode) => {
 
     const selectedPath = currentPathStore((state) => state.setPath)
     const closeSideBar = sideBarStore((state) => state.toggle)
+    const activeStore = ActivePathStore((state) => state.setPath)
 
     return (
         <div className='hover:bg-[#abb2bf]/10 cursor-pointer w-full' 
@@ -22,6 +24,7 @@ const Content = (props : FileNode) => {
                     props.select({val : props.path, isDir : props.isDir})
                     !props.isDir && selectedPath(props.path)
                     !props.isDir && closeSideBar()
+                    activeStore(props.path)
                 }}
             onContextMenu={(e) => {
                 if(e.button === 2)
