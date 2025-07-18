@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import { BsCollection } from "react-icons/bs";
-import { FaRegEdit } from "react-icons/fa";
-import { GoTerminal } from "react-icons/go";
+import { MdOutlineFileOpen } from "react-icons/md";
 import { BsFillChatRightDotsFill } from "react-icons/bs";
 import { VscVmConnect } from "react-icons/vsc";
 import Room from '../components/RoomComponents/Room';
 import Chat from '../components/Chat';
-// import EditorsOpened from '../components/opened/openedEditors';
-// import OpenedTerminals from '../components/opened/openedTerm';
 import FileExplorer from '../components/fileExplorer/fileExplorer';
 import { sideBarStore } from '../stores/sideBarStore';
-import { EditorMapsStore } from '../stores/editorsMap';
-import { ModifiedFileStore } from '../stores/modifiedFileStore';
 
 // Optional: enum for tab keys
-type Tab = 'files' | 'editor' | 'terminal' | 'chat' | 'connect';
+type Tab = 'files' | 'open' | 'chat' | 'connect';
   // const rdir = ''
 
 const SideBar = () => {
@@ -24,10 +19,17 @@ const SideBar = () => {
     switch (activeTab) {
       case 'files':
         return <FileExplorer />;
-      case 'editor':
-        // return <EditorsOpened/>;
-      case 'terminal':
-        // return <OpenedTerminals />;
+      case 'open':
+        (async () => {
+          const dir = await window.electronApi.openDir();
+          if (dir) {
+            sideBarStore.getState().toggle();
+            setActiveTab('files');
+          } else {
+            setActiveTab('files');
+          }
+        })();
+        return null;
       case 'chat':
         return <Chat username={'Hii'} />;
       case 'connect':
@@ -40,10 +42,6 @@ const SideBar = () => {
         return null;
     }
   };
-
-  const toogleSideBar = sideBarStore((state) => state.toggle)
-    const openedEditors = EditorMapsStore((state) => state.openedEditors)
-    const ModifiedFiles = ModifiedFileStore((state) => state.files)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -59,19 +57,10 @@ const SideBar = () => {
           <button onClick={() => setActiveTab('files')}>
             <BsCollection size={28} className={activeTab === 'files' ? 'text-yellow-300' : ''} />
           </button>
-          <button onClick={() => setActiveTab('editor')}>
-            <FaRegEdit size={28} className={activeTab === 'editor' ? 'text-yellow-300' : ''} />
+          <button onClick={() => setActiveTab('open')} title="Open Folder" >
+            <MdOutlineFileOpen size={28} className={activeTab === 'open' ? 'text-yellow-300' : ''}/>
           </button>
-          <button onClick={() => setActiveTab('terminal')}>
-            <GoTerminal size={28} className={activeTab === 'terminal' ? 'text-yellow-300' : ''} />
-          </button>
-          {/* <button onClick={() => setActiveTab('chat')}> */}
-          <button onClick={() => {
-              toogleSideBar()
-              // console.log(ModifiedFiles)
-              const files = ModifiedFileStore.getState().files
-              console.log(files)
-            }}>
+          <button onClick={() => setActiveTab('chat')}>
             <BsFillChatRightDotsFill size={28} className={activeTab === 'chat' ? 'text-yellow-300' : ''} />
           </button>
           <button onClick={() => setActiveTab('connect')}>

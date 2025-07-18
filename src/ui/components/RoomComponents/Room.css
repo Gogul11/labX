@@ -1,221 +1,182 @@
+/* Root Container */
 .room-container {
-  padding: 16px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(-135deg, #353535 50%, #101010 100%);
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
 }
 
+/* Tab Toggle */
 .tab-toggle {
   display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-  /* margin-top: 250px; */
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
 }
 
 .tab-toggle button {
-  flex: 1;
-  padding: 10px;
+  background-color: transparent;
+  color: #61afef;
+  border: 2px solid transparent;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
   cursor: pointer;
-  background-color: #ffffff;
-  border: 1px solid #807272;
-  border-radius: 6px;
-  font-size: 18px;
-  font-weight: 600;
-  transition: all 0.25s ease;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
 }
 
 .tab-toggle button:hover {
-  background-color: #c8c7c7;
-  border-color: #2f2323;
-  color: #ffffff;
+  background-color: #3e4451;
+  border-color: #61afef;
 }
 
-.tab-toggle button.active {
-  background-color: #622d2d;
-  color: white;
-  transform: scale(1.05);
-  border: 1px solid #ffaa0c;
-  box-shadow: 0 5px 10px rgba(255, 204, 0, 0.875);
+.tab-toggle .active {
+  background-color: #3e4451;
+  color: #98c379;
+  border-color: #98c379;
 }
 
+/* Form Section Wrapper */
 .form-section {
-  flex: 1;
+  background-color: #21252b;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #3e4451;
 }
 
+/* Room Form */
 .room-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 10px;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  gap: 1.2rem;
 }
 
+/* Input Fields */
 .room-form input {
-  padding: 10px 12px;
-  border: 1px solid #000000;
-  background-color: #e3e3e3;
-  border-radius: 6px;
-  font-size: 18px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #2c313c;
+  border: 1px solid #3e4451;
+  color: #abb2bf;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
-  box-sizing: border-box;
 }
-
 
 .room-form input:focus {
-  border-color: #007acc;
-  box-shadow: 0 0 4px rgba(0, 122, 204, 0.4);
-  outline: none;
+  border-color: #61afef;
+  box-shadow: 0 0 0 2px rgba(97, 175, 239, 0.2);
 }
 
-.host-btn, .join-btn {
-  background-color: #2b0cb5;
-  color: white;
-  padding: 12px;
-  font-weight: bold;
-  margin-top: 10px;
-  font-size: 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
+.room-form input.invalid {
+  border-color: #e06c75;
+  background-color: #2b2f36;
 }
 
-.host-btn:hover, .join-btn:host {
-  background-color: #005fa3;
-}
-
-.room-hosted {
-  margin-top: 30px;
-  padding: 16px;
-  background-color: #4f4747;
-  border-radius: 8px;
-  text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
-  color: white;
-  font-size: 19px;
-}
-
-.room-hosted h3
-{
-  color: rgb(1, 227, 1);
-  font-weight: bolder;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.copy-room-id {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.room-id-display {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: rgb(89, 255, 12);
-  padding: 10px 18px;
-  border-radius: 8px;
-  letter-spacing: 1px;
-  box-shadow: 0 0 10px rgba(1, 250, 101, 0.535);
-  font-family: monospace;
-  background-color: #2e282857;
-
-}
-
-.copy-button {
-  padding: 10px 14px;
-  border: none;
-  background-color: #15a98b;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.25s ease, transform 0.1s ease;
-  font-size: 15px;
-  font-family: monospace;
-}
-
-.copy-button:hover {
-  background-color: #019e7c;
-  transform: scale(1.05);
-}
-
-.copy-button:active {
-  transform: scale(0.98);
-}
-
-input.invalid {
-  border: 2px solid #ff4d4f;
-  background: #eeeeee;
-}
-
+/* Validation Error */
 .error-msg {
-  font-size: 13px;
-  color: #ff1900;
-  margin-top: 2px;
-  margin-bottom: 1px;
-  
+  color: #e06c75;
+  font-size: 0.85rem;
+  margin-top: -0.6rem;
+  margin-bottom: 0.4rem;
 }
 
-
+/* Checkbox */
 .allow-chat {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-family: monospace;
-  color: #ffffff;
-  margin-top: 8px;
-  cursor: pointer;
-  user-select: none;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #98c379;
 }
 
 .allow-chat input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #00ff00; 
-  cursor: pointer;
-  transform: scale(1.1);
+  accent-color: #61afef;
 }
 
-.allow-chat input[type="checkbox"]:disabled {
+/* Buttons */
+.join-btn,
+.host-btn,
+.start-btn {
+  background-color: #61afef;
+  color: #282c34;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.join-btn:hover:not(:disabled),
+.host-btn:hover,
+.start-btn:hover {
+  background-color: #528bbe;
+}
+
+.join-btn:disabled,
+.room-form button[disabled],
+.room-form input[disabled],
+.allow-chat input[disabled] {
+  background-color: #3e4451;
+  color: #7f848e;
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-
-.start-btn:hover {
-  background-color: #740400;
+/* Hosted Room Display */
+.room-hosted {
+  background-color: #2c313c;
+  border: 1px solid #3e4451;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: #abb2bf;
+  text-align: center;
 }
 
-.start-btn {
+.room-hosted h3 {
+  color: #98c379;
+  margin-bottom: 0.5rem;
+}
+
+.room-hosted p {
+  margin-bottom: 0.8rem;
+}
+
+/* Copy Room ID */
+.copy-room-id {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.room-id-display {
+  background-color: #21252b;
+  border: 1px solid #3e4451;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.375rem;
   font-family: monospace;
-  font-size: 18px;
-  font-weight: bold;
-  background-color: #b30000;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.2s ease;
+  color: #61afef;
 }
 
+.copy-button {
+  background-color: #3e4451;
+  color: #abb2bf;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.copy-button:hover {
+  background-color: #4b5263;
+}

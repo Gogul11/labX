@@ -53,37 +53,97 @@ const FolderExplorer = () => {
 
 	//Function for creating file and folder/
 	const handleCreation = () => {
-		setShowInput(false)
-		input.type === 'File' ? 
-			window.electronApi.createFile({...selectedPath, name : input.val}) : 
-			window.electronApi.createFolder({...selectedPath, name : input.val})
-		setFetch(true)
-		setInput({...input, val : ''})
-		refresh()
-	}
+		setShowInput(false);
 
+		const checkExists = (nodes: FileNode[], targetPath: string, name: string): boolean => {
+			for (const node of nodes) {
+				const parentDir = node.path.split('/').slice(0, -1).join('/');
+				if (parentDir === targetPath && node.name === name) {
+					return true;
+				}
+				if (node.isDir && node.children) {
+					if (checkExists(node.children, targetPath, name)) return true;
+				}
+			}
+			return false;
+		};
+
+		const exists = checkExists(tree, selectedPath.val, input.val);
+
+		if (exists) {
+			window.alert(`A ${input.type.toLowerCase()} named "${input.val}" already exists in this directory.`);
+			setInput({ ...input, val: '' });
+			return;
+		}
+
+		if (input.type === 'File') {
+			window.electronApi.createFile({ ...selectedPath, name: input.val });
+		} else {
+			window.electronApi.createFolder({ ...selectedPath, name: input.val });
+		}
+		setFetch(true);
+		setInput({ ...input, val: '' });
+		refresh();
+	};
+
+
+	// Updated handleRename with duplicate name check
 	const handleRename = () => {
-		setRename(false)
-		window.electronApi.renameFileOrFolder(renameInput, selectedPath.val)
-		setFetch(true)
-		setRenameInput('')
-		refresh()
-	}
+		setRename(false);
+
+		const checkExists = (nodes: FileNode[], targetPath: string, name: string): boolean => {
+			for (const node of nodes) {
+				const parentDir = node.path.split('/').slice(0, -1).join('/');
+				if (parentDir === targetPath && node.name === name) {
+					return true;
+				}
+				if (node.isDir && node.children) {
+					if (checkExists(node.children, targetPath, name)) return true;
+				}
+			}
+			return false;
+		};
+
+		const parentPath = selectedPath.val.split('/').slice(0, -1).join('/');
+		const exists = checkExists(tree, parentPath, renameInput);
+
+		if (exists) {
+			window.alert(`A file or folder named "${renameInput}" already exists in this directory.`);
+			setRenameInput('');
+			return;
+		}
+
+		window.electronApi.renameFileOrFolder(renameInput, selectedPath.val);
+		setFetch(true);
+		setRenameInput('');
+		refresh();
+	};
+
 
 	//Function for printing like tree structure NOTE : Don't touch this
 	const renderTree = (nodes: FileNode[], level = 0) =>
-		nodes.map((node) => (
-			<div key={node.path} style={{ paddingLeft: level * 16 }}>
-				<Content 
-					isDir={node.isDir}
-					name={node.name}
-					toogle = {() => openFolder(node.path, setTree, tree)}
-					select = {(p : typeof selectedPath) => setSelectedPath(p)}
-					path = {node.path}
-				/>
-				{node.isDir && node.children && node.isOpen && renderTree(node.children, level + 1)}
-			</div>
+	nodes.map((node) => (
+		<div
+			key={node.path}
+			style={{ paddingLeft: level + 16 }}
+			className={`
+				group transition-all duration-150 rounded-sm
+				${selectedPath.val === node.path ? 'bg-[#3e4451] text-[#abb2bf]' : ''}
+				${node.isDir ? 'text-[#61afef]' : 'text-[#e5c07b]'}
+			`}
+		>
+			<Content 
+				isDir={node.isDir}
+				name={node.name}
+				toogle={() => openFolder(node.path, setTree, tree)}
+				select={(p: typeof selectedPath) => setSelectedPath(p)}
+				path={node.path}
+			/>
+			{node.isDir && node.children && node.isOpen && renderTree(node.children, level + 1)}
+		</div>
 	));
+
+
 
 	useEffect(() => {
 		if(dir !== '' && tree.length === 0){
@@ -111,7 +171,7 @@ const FolderExplorer = () => {
 	}, [])
 
 return (
-    <div className=" h-full w-full">
+	<div className="h-full w-full bg-[#282c34] text-[#abb2bf]">
 
 		{/* TO open a folder */}
 		{(dir === null || dir === '') ? 
@@ -166,22 +226,19 @@ return (
 								<input 
 									type="text" 
 									value={showInput ? input.val : renameInput}
-									className='bg-[#fff]/10 px-2 border border-[#c678dd] rounded-sm w-[97%] text-white'
+									className="bg-[#3e4451] px-2 py-1 border border-[#c678dd] rounded-sm w-[97%] text-white outline-none"
 									onChange={(e) => {
-										if(showInput)
-											setInput({...input, val : e.target.value})
-										if(rename)
-											setRenameInput( e.target.value)
+										if(showInput) setInput({...input, val: e.target.value})
+										if(rename) setRenameInput(e.target.value)
 									}} 
 									onKeyDown={(key) => {
 										if(key.key === 'Enter'){
-											if(showInput)
-												handleCreation()
-											if(rename)
-												handleRename()
+											if(showInput) handleCreation()
+											if(rename) handleRename()
 										} 
 									}}
 								/>
+
 								<BiSend
 									size={22}
 									className=' text-[#98c379] cursor-pointer hover:text-[#c678dd]'

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   onSubmit: (data: { name: string; allowChat: boolean }) => void;
@@ -10,6 +11,7 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
   const [roomId, setRoomId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +31,10 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleStartRoom = () => {
+    navigate("/hostDashboard");
   };
 
   return (
@@ -72,7 +78,7 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
             </div>
           </div>
 
-          <button type="button" className="start-btn">
+          <button type="button" className="start-btn" onClick={handleStartRoom}>
             Start Room
           </button>
         </>
