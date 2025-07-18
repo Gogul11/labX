@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation } from 'react-router';
 import EditorPage from './pages/editorPage';
 import { sideBarStore } from './stores/sideBarStore';
 import SideBar from './pages/sideBar';

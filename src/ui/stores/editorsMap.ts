@@ -10,7 +10,8 @@ type editorMapsType = {
     openedEditors : Record<string, EditorEntry>,
     setOpenedEditors : (path : string, open : boolean, data : string, ext : string) => void,
     toogleEditors : (path : string) => void,
-    deleteEditor : (path : string) => void
+    deleteEditor : (path : string) => void,
+    setEditorData : (path : string, data : string) => void,
 }
 
 export const EditorMapsStore = create<editorMapsType>((set) => ({
@@ -27,6 +28,16 @@ export const EditorMapsStore = create<editorMapsType>((set) => ({
         }
     })),
 
+    setEditorData : (path : string, data : string) => set((state) => ({
+        openedEditors : {
+            ...state.openedEditors,
+            [path] : {
+                ...state.openedEditors[path],
+                data : data
+            }
+        }
+    })),
+
     toogleEditors : (path : string) => set((state) => {
         const current = state.openedEditors
         const updatedMap : Record<string, EditorEntry> = {}
@@ -37,7 +48,7 @@ export const EditorMapsStore = create<editorMapsType>((set) => ({
                 else{
                     updatedMap[key] = {
                         ...current[key],
-                        isOpen : key === path
+                        isOpen : key == path
                     }
                 }
         }

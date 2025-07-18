@@ -3,6 +3,7 @@ import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import 'xterm/css/xterm.css'
 import { handleResize, handleTerminalRunTime, TerminalConfig } from "../utils/terminalUtils";
+import { dirStore } from "../stores/directoryStore";
 
 const LabXTerminal: React.FC = () => {
 
@@ -12,6 +13,8 @@ const LabXTerminal: React.FC = () => {
 
   const input = useRef<string>("")
   const cursor = useRef<number>(0)
+
+  const globalDir = dirStore((state) => state.dir)
   
 
   useEffect(() => {
@@ -22,7 +25,7 @@ const LabXTerminal: React.FC = () => {
       terminal.current.open(terminalParent.current)
       fitAddon.current.fit();
 
-      window.electronApi.startTerminal()
+      window.electronApi.startTerminal(globalDir)
     }
 
     

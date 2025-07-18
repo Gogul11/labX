@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 type Props = {
   onSubmit: (data: { name: string; allowChat: boolean }) => void;

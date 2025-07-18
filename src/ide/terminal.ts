@@ -2,12 +2,12 @@ import * as pty from 'node-pty'
 
 const shell = 'bash'
 
-const ptyProcess = pty.spawn(shell, [], {
+const ptyProcess= (dir : string) =>( pty.spawn(shell, [], {
     name : 'xterm-256color',
-    cwd : process.cwd(),
+    cwd : dir,
     env : process.env
-})
+}))
 
-export const initiateTerminal = () => {
-    return ptyProcess
+export const initiateTerminal = (dir : string) => {
+    return ptyProcess(dir)
 }

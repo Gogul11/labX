@@ -1,12 +1,31 @@
 import { Editor } from '@monaco-editor/react';
+import { useEffect, useState } from 'react';
+import { EditorMapsStore } from '../stores/editorsMap';
 
 type propsType = {
   theme ?: string,
   value : string,
-  ext : string
+  ext : string,
+  path : string
 }
 
-const LabXEditor : React.FC<propsType> = ({theme, value, ext}) => {
+const LabXEditor : React.FC<propsType> = ({theme, value, ext, path}) => {
+
+  const [val, setVal] = useState<string>(value)
+  const setEditorData = EditorMapsStore((state) => state.setEditorData)
+
+  useEffect(() => {
+    setVal(val)
+  }, [value])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+        setEditorData(path, val)    
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [val, value, path, setEditorData])
+
   return (
     <div className='h-[100%] w-[100%]'>
       <Editor
@@ -26,6 +45,7 @@ const LabXEditor : React.FC<propsType> = ({theme, value, ext}) => {
             bottom: 16,
           },
         }}
+        onChange={(val) => setVal(val ?? '')}
       />
     </div>
   );

@@ -3,7 +3,7 @@ import { contextBridge, ipcRenderer } from "electron";
 
 
 contextBridge.exposeInMainWorld('electronApi', {
-    startTerminal : () => ipcRenderer.send('terminal-start'),
+    startTerminal : (dir : string) => ipcRenderer.send('terminal-start', dir),
     sendInput : (input : string) => ipcRenderer.send('terminal-input', input),
     receiveOutput : (func : (data : string) => void) => ipcRenderer.on('terminal-output', (_event, data) => func(data)),
     readDir : (path : string) => ipcRenderer.invoke('read-dir', path),
@@ -15,5 +15,9 @@ contextBridge.exposeInMainWorld('electronApi', {
     selectRenameFileOrFolder : (func : () => void) => ipcRenderer.on('select-rename-file-folder', (_event) => func()),
     renameFileOrFolder : (name : string, filePath : string) => ipcRenderer.send('rename-file-folder', name, filePath),
     openFile : (path : string) => ipcRenderer.invoke('open-file', path),
-    getFileName : (path : string) => ipcRenderer.invoke('get-file-name', path)
+    getFileName : (path : string) => ipcRenderer.invoke('get-file-name', path),
+
+
+    saveTrigger : (func : () => void) => ipcRenderer.on('save-trigger', (_event) => func()),
+    saveSelectedFile : (path : string, data : string) => ipcRenderer.invoke('save-selected-file', path, data)
 })

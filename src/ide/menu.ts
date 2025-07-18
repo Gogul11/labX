@@ -43,7 +43,7 @@ export const MenuTemplate = (mainWindow: BrowserWindow): MenuItemConstructorOpti
           label: 'Save',
           accelerator: 'CmdOrCtrl+S',
           click: () => {
-            mainWindow.webContents.send('menu-save');
+            mainWindow.webContents.send('save-trigger');
           },
         },
         { type: 'separator' as const },

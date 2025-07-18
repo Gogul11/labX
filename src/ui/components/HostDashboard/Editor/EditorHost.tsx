@@ -28,6 +28,7 @@ const EditorHost: React.FC = () => {
           theme="vs-dark"
           value={fileData.data}
           ext={fileData.ext}
+          path=''
         />
       ) : (
         <div className="text-gray-400 p-8">Click a file to open it here.</div>
