@@ -3,6 +3,7 @@ import LabXEditor from '../components/editor';
 import LabXTerminal from '../components/terminal';
 import OpenedEditors from '../components/opened/openedEditors';
 import OpenedTerminals from '../components/opened/openedTerm';
+import WelcomeScreen from './welcomePage';
 // import type { Terminal } from '../types/types'
 import { Rnd } from 'react-rnd';
 import { 
@@ -67,6 +68,14 @@ const EditorPage = () => {
       })();
     }, [selectedPath]);
 
+    useEffect(() => {
+        if (!showTerminal) {
+            setEditorWidth(window.innerWidth);
+        }
+    }, [showTerminal]);
+
+    const hasOpenEditors = Object.values(openedEditors).some((e) => e.isOpen);
+
     
     return (
         <div className="flex h-screen gap-6 w-screen">
@@ -83,16 +92,23 @@ const EditorPage = () => {
                     enableResizing = {enableResizingOptions(showTerminal)}
                     className='hide-scrollbar'
                 >
-                    {Object.entries(openedEditors).map(([path, vals]) => (
-                      vals.isOpen && 
-                      <div className='h-[96%] w-full'>
-                          <LabXEditor theme="vs-dark"
-                            key={path} 
-                            value={vals.data}
-                            ext={vals.ext}
-                          />
-                      </div>
-                    ))}
+                    {hasOpenEditors ?(
+                        Object.entries(openedEditors).map(([path, vals]) => (
+                        vals.isOpen && 
+                        <div className='h-[96%] w-full'>
+                            <LabXEditor theme="vs-dark"
+                                key={path} 
+                                value={vals.data}
+                                ext={vals.ext}
+                            />
+                        </div>
+                        )
+                    )):(
+                        <div className="">
+                            <WelcomeScreen/>
+                        </div>
+                    )
+                    }
                 </Rnd>
 
                 {/* Terminal */}
