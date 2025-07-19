@@ -106,7 +106,9 @@ const EditorPage = () => {
                      if (res) console.log("success");
                     else console.log("fail");
                 }
+                ModifiedFileStore.getState().clearFiles()
             }
+
 
             saveAllFile()
         })
