@@ -1,14 +1,25 @@
+import { HashRouter, Routes, Route } from 'react-router';
+import EditorPage from './pages/editorPage';
+import HostDashboard from './components/HostDashboard/hostDashboard';
 
-function App() {
+function AppContent() {
 
   return (
-    <div className="flex flex-col gap-4 justify-center items-center h-screen bg-black/80">
-      <p className="text-green-500 text-6xl">
-        labX
-      </p>
-      <p className="text-lg text-red-500">NOTE : Read the reademe file</p>
-    </div>
-  )
+    <>
+      <Routes>
+        <Route path="/" element={<EditorPage />} />
+        <Route path="/hostDashboard" element={<HostDashboard />} />
+      </Routes>
+    </>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <HashRouter>
+      <AppContent />
+    </HashRouter>
+  );
+}
+
+export default App;

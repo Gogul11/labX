@@ -1,0 +1,111 @@
+.main-container {
+  display: flex;
+  height: 100vh;
+  background-color: #282c34;
+  color: #abb2bf;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.client-folder-view {
+  flex: 0 0 30%;
+  padding: 20px;
+  background-color: #21252b;
+  color: #abb2bf;
+  overflow-y: auto;
+  border-right: 1px solid #3e4451;
+}
+
+.editor-view {
+  flex: 0 0 70%;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #1e2228;
+  color: #ffffff;
+}
+
+.client-header {
+  margin-bottom: 16px;
+}
+
+.client-name-highlight {
+  color: #61afef;
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.client-reg-highlight {
+  color: #e5c07b;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.folder-structure {
+  font-size: 16px;
+}
+
+.folder-block {
+  margin-bottom: 10px;
+}
+
+.folder-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  gap: 6px;
+}
+
+.folder-toggle:hover {
+  background-color: #2c313a;
+}
+
+.folder-arrow {
+  font-size: 14px;
+  color: #c678dd;
+}
+
+.folder-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #c678dd;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.folder-name *{
+  margin-right: 5px;
+}
+
+.file-list {
+  padding-left: 24px;
+  margin-top: 4px;
+}
+
+.file-item {
+  padding: 2px 8px;
+  color: #98c379;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.file-item *{
+  margin-right: 6px;
+}
+
+.file-item:hover {
+  background-color: #2c313a;
+}
+
+.file-item.active {
+  background-color: #3e4451;
+  font-weight: bold;
+}

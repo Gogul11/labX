@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+*{
+    box-sizing: border-box;
+}
+
+button:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+/* global.css */
+.hide-scrollbar {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
