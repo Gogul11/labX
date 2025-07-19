@@ -3,6 +3,7 @@ import LabXEditor from '../components/editor';
 import LabXTerminal from '../components/terminal';
 import OpenedEditors from '../components/opened/openedEditors';
 import OpenedTerminals from '../components/opened/openedTerm';
+import WelcomeScreen from './welcomePage';
 // import type { Terminal } from '../types/types'
 import { Rnd } from 'react-rnd';
 import { 
