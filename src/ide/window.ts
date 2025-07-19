@@ -1,4 +1,4 @@
-import { type App, BrowserWindow } from "electron";
+import { type App, BrowserWindow, screen } from "electron";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 // import path from "node:pa"
@@ -8,12 +8,16 @@ export const Window = (_app : App) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
 
+    const {height, width} = screen.getPrimaryDisplay().workAreaSize
+
+    const minHeight = Math.floor(height * 0.8)
+    const minWidth = Math.floor(width * 0.8)
 
     const win : BrowserWindow = new BrowserWindow({
-        minWidth : 700,
-        minHeight : 700,
-        width : 900,
-        height : 900,
+        minWidth : minWidth,
+        minHeight : minHeight,
+        width : width,
+        height : height,
         show : false,
         webPreferences : {
             preload: path.join(__dirname, 'preload.js'),

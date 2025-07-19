@@ -19,15 +19,19 @@ import { openedTerminalStore } from '../stores/terminlasStore';
 import { GiDolphin } from "react-icons/gi";
 import { ActivePathStore } from '../stores/activePathStore';
 import { ModifiedFileStore } from '../stores/modifiedFileStore';
+import { showTerminalStore } from '../stores/showTerminalStore';
 
 const EditorPage = () => {
 
-    const[showTerminal, setShowTerminal] = useState<boolean>(false)
+    // const[showTerminal, setShowTerminal] = useState<boolean>(false)
     const[terminalWidth, setTerminalWidth] = useState<number>(window.innerWidth * 0.5)
     const[editorWidth, setEditorWidth] = useState<number>(window.innerWidth)
     
     //stores
     const toogleSideBar = sideBarStore((state) => state.toggle)
+
+    const showTerminal = showTerminalStore((state) => state.open)
+    const setShowTerminal = showTerminalStore((state) => state.toogle)
 
     //selectedPath store 
     const selectedPath = currentPathStore((state) => state.path)
