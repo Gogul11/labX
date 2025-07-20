@@ -21,7 +21,9 @@ export interface apiType {
 
     saveAllTrigger : (func : () => void) => void,
 
-    submitWorkSpace : (folderPath : string, outputFolderName : string) => Promise<boolean>
+    submitWorkSpace : (folderPath : string, outputFolderName : string) => Promise<boolean>,
+
+    startServer : () => void
 }
 
 declare global {

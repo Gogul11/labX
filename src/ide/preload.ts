@@ -20,5 +20,7 @@ contextBridge.exposeInMainWorld('electronApi', {
 
     saveAllTrigger : (func : () => void) => ipcRenderer.on('save-all-trigger', func),
 
-    submitWorkSpace : (folderPath : string, outputFolderName : string) => ipcRenderer.invoke('submit-work-space', folderPath, outputFolderName)
+    submitWorkSpace : (folderPath : string, outputFolderName : string) => ipcRenderer.invoke('submit-work-space', folderPath, outputFolderName),
+
+    startServer : () => ipcRenderer.send('start-server')
 })

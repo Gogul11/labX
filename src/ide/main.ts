@@ -11,6 +11,7 @@ import {OpenDir} from './api/openDir.js'
 import {ReadDir} from './api/ReadDir.js'
 import {ExplorerMenu} from './api/explorerMenu.js'
 import {zipFolder} from './api/zipper.js'
+import {startServer} from './backend/server.js'
 
 app.on('ready', () => {
 
@@ -46,5 +47,7 @@ app.on('ready', () => {
     //Save file
     ipcMain.handle('save-selected-file', saveSelectedFileFunc)
 
-    ipcMain.handle('submit-work-space', zipFolder)
+    ipcMain.handle('submit-work-space', zipFolder),
+
+    ipcMain.on('start-server', startServer)
 })
