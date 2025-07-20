@@ -23,7 +23,7 @@ const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
     const generatedRoomId = "ABC123";
     setRoomId(generatedRoomId);
     onSubmit({ name, allowChat });
-    window.electronApi.startServer()
+    window.electronApi.startServer(generatedRoomId)
   };
 
   const copyToClipboard = async () => {

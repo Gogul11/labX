@@ -1,5 +1,6 @@
 import React, { useState} from "react";
 import "./Room.css"; 
+import { io } from "socket.io-client";
 
 type Props = {
   onSubmit: (data: { name: string; regNo: number; roomId: string }) => void;
@@ -20,9 +21,17 @@ const JoinRoomForm: React.FC<Props> = ({ onSubmit }) => {
   const isRoomIdValid = roomId.trim() !== "";
   const isFormValid = isNameValid && isRegNoValid && isRoomIdValid;
 
+  const socket = io('http://192.168.103.83:5000')
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid) {
+
+      socket.emit("join", {
+        username: name + "-" + regNo,
+        room: roomId,
+      });
+
       onSubmit({ name, regNo: Number(regNo), roomId });
     }
   };

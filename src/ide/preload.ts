@@ -22,5 +22,5 @@ contextBridge.exposeInMainWorld('electronApi', {
 
     submitWorkSpace : (folderPath : string, outputFolderName : string) => ipcRenderer.invoke('submit-work-space', folderPath, outputFolderName),
 
-    startServer : () => ipcRenderer.send('start-server')
+    startServer : (roomId : string) => ipcRenderer.invoke('start-server', roomId)
 })
