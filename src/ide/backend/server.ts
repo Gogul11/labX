@@ -5,23 +5,36 @@ import { createServer } from "http";
 
 export const startServer = (
     _event : IpcMainInvokeEvent,
-    roomId : string
+    roomId : string,
+    roomName : string,
+    portNo : string
 ) => {
 
     const app = express()
     const labXSever = createServer(app)
-    const io = new Server(labXSever)
+    const io = new Server(labXSever, {
+        cors : {
+            origin : "*",
+            methods : ["GET", "POST"]
+        }
+    })
 
     const currentRoomId = roomId
+    let adminSocketId : string | null = null;
     
     io.on('connection', (socket) => {
-        socket.on('join', ({username, room}) => {
-            if(room !== currentRoomId){
+        socket.on('join', ({name, regNo, roomId}) => {
+            if(roomId !== currentRoomId){
                 socket.disconnect(true)
                 return
             }
-
-            console.log(username, room)
+            console.log(name, regNo, roomId)
+            
+        })
+        
+        socket.on('admin-join', () => {
+            adminSocketId = socket.id
+            console.log("Admin joined:", socket.id);
         })
     })
 
@@ -30,7 +43,7 @@ export const startServer = (
         res.status(200).json({test : "success"})
     })
 
-    labXSever.listen(5000, () => {
-        console.log("server is running")
+    labXSever.listen(parseInt(portNo), '0.0.0.0',() => {
+        console.log("server is running", portNo)
     })
 }

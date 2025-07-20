@@ -1,82 +1,110 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { io } from "socket.io-client";
 
-type Props = {
-  onSubmit: (data: { name: string; allowChat: boolean }) => void;
-};
-
-const HostRoomForm: React.FC<Props> = ({ onSubmit }) => {
+const HostRoomForm: React.FC = () => {
   const [name, setName] = useState("");
-  const [allowChat, setAllowChat] = useState(true);
-  const [roomId, setRoomId] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [error, setError] = useState("");
+  const [roomId, setRoomId] = useState("");
+  const [port, setPort] = useState("");
+  const [staffId, setStaffId] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isHosted, setIsHosted] = useState(false);
   const navigate = useNavigate();
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!name.trim()) newErrors.name = "Room name is required.";
+    if (!roomId.trim()) newErrors.roomId = "Room ID is required.";
+    if (!port.trim() || !/^\d{4,5}$/.test(port)) newErrors.port = "Port must be 4-5 digits.";
+    if (!staffId.trim()) newErrors.staffId = "Staff ID is required.";
+
+    return newErrors;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("Room Name is required.");
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-    setError("");
-    const generatedRoomId = "ABC123";
-    setRoomId(generatedRoomId);
-    onSubmit({ name, allowChat });
-    window.electronApi.startServer(generatedRoomId)
-  };
 
-  const copyToClipboard = async () => {
-    if (roomId) {
-      await navigator.clipboard.writeText(roomId);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    setErrors({});
+    window.electronApi.startServer(roomId, name, port);
+    console.log(name, roomId, port, staffId)
+    setIsHosted(true);
   };
-
+  const soc = io(`http://192.168.103.83:${port}`)
   const handleStartRoom = () => {
+    soc.emit('admin-join')
     navigate("/hostDashboard");
   };
 
   return (
     <form onSubmit={handleSubmit} className="room-form">
-      <input
-        type="text"
-        placeholder="Room Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className={error ? "invalid" : ""}
-        disabled={!!roomId}
-      />
-      {error && <span className="error-msg">{error}</span>}
 
-      <label className="allow-chat">
-        Allow Chat
+       <div>
         <input
-          type="checkbox"
-          checked={allowChat}
-          onChange={(e) => setAllowChat(e.target.checked)}
-          disabled={!!roomId}
+          type="text"
+          placeholder="Staff ID"
+          value={staffId}
+          onChange={(e) => setStaffId(e.target.value)}
+          className={errors.staffId ? "invalid" : ""}
+          disabled={isHosted}
         />
-      </label>
+        {errors.staffId && <span className="error-msg">{errors.staffId}</span>}
+      </div>
 
-      {!roomId && (
-        <button type="submit" className="host-btn" >
+      <div>
+        <input
+          type="text"
+          placeholder="Room Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className={errors.name ? "invalid" : ""}
+          disabled={isHosted}
+        />
+        {errors.name && <span className="error-msg">{errors.name}</span>}
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="Room ID"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value)}
+          className={errors.roomId ? "invalid" : ""}
+          disabled={isHosted}
+        />
+        {errors.roomId && <span className="error-msg">{errors.roomId}</span>}
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="Port Number"
+          value={port}
+          onChange={(e) => setPort(e.target.value)}
+          className={errors.port ? "invalid" : ""}
+          disabled={isHosted}
+        />
+        {errors.port && <span className="error-msg">{errors.port}</span>}
+      </div>
+
+     
+
+      {!isHosted ? (
+        <button type="submit" className="host-btn">
           Host
         </button>
-      )}
-
-      {roomId && (
+      ) : (
         <>
           <div className="room-hosted">
             <h3>Room Hosted Successfully!</h3>
-            <p>Share this Room ID with others:</p>
-            <div className="copy-room-id">
-              <code className="room-id-display">{roomId}</code>
-              <button onClick={copyToClipboard} className="copy-button">
-                {copied ? "Copied!" : "Copy"}
-              </button>
-            </div>
+            <p>Room ID: <code className="room-id-display">{roomId}</code></p>
+            <p>The server is running on port : <code className="room-id-display">{port}</code></p>      
           </div>
 
           <button type="button" className="start-btn" onClick={handleStartRoom}>

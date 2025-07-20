@@ -23,7 +23,7 @@ export interface apiType {
 
     submitWorkSpace : (folderPath : string, outputFolderName : string) => Promise<boolean>,
 
-    startServer : (roomId : string) => Promise<boolean>
+    startServer : (roomId : string, roomName : string, portNo : string) => Promise<boolean>
 }
 
 declare global {

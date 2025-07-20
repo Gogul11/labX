@@ -3,12 +3,7 @@ import JoinRoomForm from "./joinRoom";
 import HostRoomForm from "./hostRoom";
 import './Room.css';
 
-type Props = {
-  onJoin: (data: { roomId: string; name: string; regNo: string }) => void;
-  onHost: (data: { name: string; regNo: string }) => void;
-};
-
-const Room: React.FC<Props> = ({ onJoin, onHost }) => {
+const Room: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"join" | "host">("join");
 
   return (
@@ -24,9 +19,9 @@ const Room: React.FC<Props> = ({ onJoin, onHost }) => {
 
       <div className="form-section">
         {activeTab === "join" ? (
-          <JoinRoomForm onSubmit={() => onJoin} />
+          <JoinRoomForm  />
         ) : (
-          <HostRoomForm onSubmit={() => onHost} />
+          <HostRoomForm  />
         )}
       </div>
     </div>

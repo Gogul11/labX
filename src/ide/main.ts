@@ -49,5 +49,5 @@ app.on('ready', () => {
 
     ipcMain.handle('submit-work-space', zipFolder),
 
-    ipcMain.on('start-server', (event, roomId) => startServer(event, roomId))
+    ipcMain.handle('start-server', (event, roomId, roomNo, portNo) => startServer(event, roomId, roomNo, portNo))
 })
