@@ -6,6 +6,7 @@ const HostRoomForm: React.FC = () => {
   const [name, setName] = useState("");
   const [roomId, setRoomId] = useState("");
   const [port, setPort] = useState("");
+  const [ip, setIp] = useState("");
   const [staffId, setStaffId] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isHosted, setIsHosted] = useState(false);
@@ -18,6 +19,7 @@ const HostRoomForm: React.FC = () => {
     if (!roomId.trim()) newErrors.roomId = "Room ID is required.";
     if (!port.trim() || !/^\d{4,5}$/.test(port)) newErrors.port = "Port must be 4-5 digits.";
     if (!staffId.trim()) newErrors.staffId = "Staff ID is required.";
+    if (!ip.trim() || !/^(\d{1,3}\.){3}\d{1,3}$/.test(ip)) newErrors.Ip = "Valid IP address is required.";
 
     return newErrors;
   };
@@ -36,8 +38,8 @@ const HostRoomForm: React.FC = () => {
     console.log(name, roomId, port, staffId)
     setIsHosted(true);
   };
-  const soc = io(`http://192.168.103.83:${port}`)
   const handleStartRoom = () => {
+    const soc = io(`http://${ip}:${port}`)
     soc.emit('admin-join')
     navigate("/hostDashboard");
   };
@@ -79,6 +81,18 @@ const HostRoomForm: React.FC = () => {
           disabled={isHosted}
         />
         {errors.roomId && <span className="error-msg">{errors.roomId}</span>}
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="Ip address"
+          value={ip}
+          onChange={(e) => setIp(e.target.value)}
+          className={errors.Ip ? "invalid" : ""}
+          disabled={isHosted}
+        />
+        {errors.Ip && <span className="error-msg">{errors.Ip}</span>}
       </div>
 
       <div>

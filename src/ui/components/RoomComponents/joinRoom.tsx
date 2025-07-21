@@ -10,7 +10,7 @@ const JoinRoomForm: React.FC = () => {
 
   const [ip, setIp] = useState("");
   const [portNo, setPortNo] = useState("");
-
+  const [loader, setLoader] = useState<boolean>(false)
   const [touched, setTouched] = useState({
     name: false,
     regNo: false,
@@ -53,6 +53,16 @@ const JoinRoomForm: React.FC = () => {
     if (isFormValid) {
       const soc = io(`http://${ip}:${portNo}`)
       soc.emit('join', formData)
+      setLoader(true)
+
+       soc.on('joined-response', () => {
+          setLoader(false)
+      })
+
+      soc.on('join-failed', ({message}) => {
+          setLoader(true)
+          window.alert(message)
+      })
     }
   };
 
@@ -124,7 +134,7 @@ const JoinRoomForm: React.FC = () => {
           type="submit"
           className="host-btn w-[80%]"
         >
-          Join
+          {loader ? "Loading..." : "Join"}
         </button>
       </div>
     </form>
