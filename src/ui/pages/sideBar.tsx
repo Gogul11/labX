@@ -35,11 +35,6 @@ const SideBar = () => {
         })();
         return null;
       case 'chat':
-        (async () => {
-          const response = await window.electronApi.submitWorkSpace(dirStore.getState().dir, "demoTest")
-          if(response) console.log("success")
-          else console.log("fail")
-        })();
         return <Chat username={'Hii'} />;
       case 'connect':
         return <Room onJoin={function (): void {

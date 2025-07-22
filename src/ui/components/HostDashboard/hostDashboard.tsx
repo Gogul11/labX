@@ -89,11 +89,7 @@ const HostDashboard: React.FC = () => {
       <div className="main-content">
         {sidebarVisible && (
           <div className="sidebar-container" style={{ width: sidebarWidth }}>
-            <Sidebar
-              clients={clients}
-              onSelectClient={setSelectedClient}
-              selectedClientId={selectedClient?.id ?? null}
-            />
+            <Sidebar/>
             <div className="sidebar-resizer" onMouseDown={handleMouseDown} />
           </div>
         )}

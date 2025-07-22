@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { io } from "socket.io-client";
+import { dirStore } from "../../stores/directoryStore";
+import axios from 'axios'
 
 const JoinRoomForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +12,7 @@ const JoinRoomForm: React.FC = () => {
 
   const [ip, setIp] = useState("");
   const [portNo, setPortNo] = useState("");
-
+  const [loader, setLoader] = useState<boolean>(false)
   const [touched, setTouched] = useState({
     name: false,
     regNo: false,
@@ -18,6 +20,12 @@ const JoinRoomForm: React.FC = () => {
     ip: false,
     portNo: false,
   });
+
+  const[joined, setJoined] = useState(false)
+  const[commitLoader, setCommitLoader] = useState(false)
+
+
+  const [submitRegNo, setSubmitRegNo] = useState('')
 
   const handleChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -31,10 +39,11 @@ const JoinRoomForm: React.FC = () => {
   };
 
   const isNameValid = formData.name.trim() !== "";
-  const isRegNoValid = /^\d+$/.test(formData.regNo);
+  const isRegNoValid = formData.regNo.trim() !== "";
   const isRoomIdValid = formData.roomId.trim() !== "";
   const isIPValid = /^(\d{1,3}\.){3}\d{1,3}$/.test(ip);
   const isPortNoValid = /^\d{1,5}$/.test(portNo) && +portNo <= 65535;
+  const isSubmitRegNoValid = submitRegNo.trim() !== "";
 
   const isFormValid =
     isNameValid && isRegNoValid && isRoomIdValid && isIPValid && isPortNoValid;
@@ -53,6 +62,17 @@ const JoinRoomForm: React.FC = () => {
     if (isFormValid) {
       const soc = io(`http://${ip}:${portNo}`)
       soc.emit('join', formData)
+      setLoader(true)
+
+       soc.on('joined-response', () => {
+          setLoader(false)
+          setJoined(true)
+      })
+
+      soc.on('join-failed', ({message}) => {
+          setLoader(true)
+          window.alert(message + "\nTry to Rejoin or Contact Teacher")
+      })
     }
   };
 
@@ -81,53 +101,128 @@ const JoinRoomForm: React.FC = () => {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {renderField("name", "Name", isNameValid)}
-      {renderField("regNo", "Registration Number", isRegNoValid, true, "Numbers only")}
-      {renderField("roomId", "Room ID", isRoomIdValid)}
+    <div>
+      {!joined  ? 
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {renderField("name", "Name", isNameValid)}
+        {renderField("regNo", "Registration Number", isRegNoValid, true, "Numbers only")}
+        {renderField("roomId", "Room ID", isRoomIdValid)}
 
-      {/* IP field */}
-      <div>
-        <label className="block mb-1 font-medium text-sm">IP Address</label>
-        <input
-          type="text"
-          value={ip}
-          onChange={(e) => setIp(e.target.value)}
-          className={`w-full px-3 py-2 border rounded ${
-            !isIPValid && touched.ip ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {!isIPValid && touched.ip && (
-          <div className="text-sm text-red-600 mt-1">Invalid IP format</div>
-        )}
-      </div>
+        {/* IP field */}
+        <div>
+          <label className="block mb-1 font-medium text-sm">IP Address</label>
+          <input
+            type="text"
+            value={ip}
+            onChange={(e) => setIp(e.target.value)}
+            className={`w-full px-3 py-2 border rounded ${
+              !isIPValid && touched.ip ? "border-red-500" : "border-gray-300"
+            }`}
+            />
+          {!isIPValid && touched.ip && (
+            <div className="text-sm text-red-600 mt-1">Invalid IP format</div>
+          )}
+        </div>
 
-      {/* Port field */}
-      <div>
-        <label className="block mb-1 font-medium text-sm">Port Number</label>
-        <input
-          type="text"
-          value={portNo}
-          onChange={(e) => setPortNo(e.target.value)}
-          onKeyDown={handleKeyDownNumberOnly}
-          className={`w-full px-3 py-2 border rounded ${
-            !isPortNoValid && touched.portNo ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {!isPortNoValid && touched.portNo && (
-          <div className="text-sm text-red-600 mt-1">Max 65535</div>
-        )}
-      </div>
+        {/* Port field */}
+        <div>
+          <label className="block mb-1 font-medium text-sm">Port Number</label>
+          <input
+            type="text"
+            value={portNo}
+            onChange={(e) => setPortNo(e.target.value)}
+            onKeyDown={handleKeyDownNumberOnly}
+            className={`w-full px-3 py-2 border rounded ${
+              !isPortNoValid && touched.portNo ? "border-red-500" : "border-gray-300"
+            }`}
+            />
+          {!isPortNoValid && touched.portNo && (
+            <div className="text-sm text-red-600 mt-1">Max 65535</div>
+          )}
+        </div>
 
-      <div className="flex justify-center items-center">
-        <button
-          type="submit"
-          className="host-btn w-[80%]"
-        >
-          Join
-        </button>
-      </div>
-    </form>
+        <div className="flex justify-center items-center">
+          <button
+            type="submit"
+            className="host-btn w-[80%]"
+            >
+            {loader ? "Loading..." : "Join"}
+          </button>
+        </div>
+      </form>
+      :
+          <div className="mt-4 px-4">
+            <div>
+              <input
+                type="text"
+                onChange={(e) => setSubmitRegNo(e.target.value)}
+                value={submitRegNo}
+                className={`w-full px-3 py-2 border rounded ${
+                  !isSubmitRegNoValid ?  "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {!isSubmitRegNoValid && (
+                <div className="text-sm text-red-600 mt-1">Register Number required</div>
+              )}
+            </div>
+            <button 
+              disabled={!isSubmitRegNoValid || commitLoader}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-200"
+              onClick={async() => {
+                          if (!isSubmitRegNoValid) return;
+
+                          setCommitLoader(true)
+                          
+                          const response = await window.electronApi.submitWorkSpace(dirStore.getState().dir, "demotest")
+                          if (!response) {
+                              console.log("Zipping failed");
+                              window.alert("zipping failed or retry")
+                              setCommitLoader(false);
+                              return;
+                          }
+                          console.log("zipped at : ", response)
+
+                          const zipBlob = await window.electronApi.readZipContent(response)
+                          const zipBlobFile = new File([zipBlob], `${submitRegNo}.zip`, {
+                            type : 'application/zip'
+                          })
+
+                          const commitFormData = new FormData()
+
+                          commitFormData.append('zipfile', zipBlobFile)
+                          commitFormData.append('regNo', submitRegNo)
+
+                          try {
+                            const fileUploadResponse = await axios.post('http://localhost:5000/commit', commitFormData)
+
+                            switch(fileUploadResponse.data.success){
+                              case 1 : 
+                                console.log(fileUploadResponse.data.message)
+                                break
+                              case 2 : 
+                                console.log(fileUploadResponse.data.message) 
+                                break;
+                              case 3 : 
+                                console.log(fileUploadResponse.data.message)
+                                break;
+                            }
+                          } catch (error) {
+                              console.error("Commit failed:", error);
+                              window.alert("Commit failed. Check your connection or try again.");
+                          }
+                          
+                          
+
+                          setCommitLoader(false)
+              }}
+            >
+              {commitLoader ? 'commiting..do not close tab' : 'Commit your code base to teacher' }
+            </button>
+          </div>
+
+      }
+    </div>
   );
 };
 

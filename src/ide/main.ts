@@ -13,6 +13,7 @@ import {ReadDir} from './api/ReadDir.js'
 import {ExplorerMenu} from './api/explorerMenu.js'
 import {zipFolder} from './api/zipper.js'
 import {startServer} from './backend/server.js'
+import {ReadZipFile} from './api/readZipFile.js'
 
 app.on('ready', () => {
 
@@ -54,5 +55,7 @@ app.on('ready', () => {
 
     ipcMain.handle('submit-work-space', zipFolder),
 
-    ipcMain.handle('start-server', (event, roomId, roomNo, portNo) => startServer(event, roomId, roomNo, portNo))
+    ipcMain.handle('start-server', (event, roomId, roomNo, portNo, storageDir) => startServer(event, roomId, roomNo, portNo, storageDir))
+
+    ipcMain.handle('read-zip-file', (event, zipFilePath) => ReadZipFile(event, zipFilePath))
 })

@@ -10,16 +10,18 @@ export const zipFolder = async (
     try{
         const zip = new AdmZip()
         zip.addLocalFolder(folderPath)
-        const out = path.join(folderPath, outputFolderName)
-        console.log(out, " ", folderPath)
-        zip.writeZip(out)
-        console.log(out, " written successfully") 
+        
+        const parentDir = path.dirname(folderPath);
+        const outputZipPath = path.join(parentDir, `${outputFolderName}.zip`);
 
-        return true
+        zip.writeZip(outputZipPath);
+        console.log("✅ Zip written to:", outputZipPath);
+
+        return outputZipPath
     }
     catch(e){
         console.log("failure ", e)
 
-        return false
+        return null
     }
 }
