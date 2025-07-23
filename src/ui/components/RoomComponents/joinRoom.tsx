@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { io } from "socket.io-client";
 import { dirStore } from "../../stores/directoryStore";
 import axios from 'axios'
+import { ipStore } from "../../stores/ipStore";
+import { roomIdStore } from "../../stores/roomIdStore";
 
 const JoinRoomForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -60,13 +62,17 @@ const JoinRoomForm: React.FC = () => {
     });
 
     if (isFormValid) {
-      const soc = io(`http://${ip}:${portNo}`)
+      ipStore.getState().setIp(`http://${ip}:${portNo}`)
+
+      const soc = io(ipStore.getState().ip);
+      
       soc.emit('join', formData)
       setLoader(true)
 
        soc.on('joined-response', () => {
           setLoader(false)
           setJoined(true)
+          roomIdStore.getState().setRoomId(formData.roomId)
       })
 
       soc.on('join-failed', ({message}) => {
@@ -102,7 +108,7 @@ const JoinRoomForm: React.FC = () => {
 
   return (
     <div>
-      {!joined  ? 
+      {!joined && roomIdStore.getState().roomId === ''  ? 
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {renderField("name", "Name", isNameValid)}
@@ -168,13 +174,27 @@ const JoinRoomForm: React.FC = () => {
             </div>
             <button 
               disabled={!isSubmitRegNoValid || commitLoader}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-200"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-200 mt-4"
               onClick={async() => {
                           if (!isSubmitRegNoValid) return;
 
                           setCommitLoader(true)
+
+                          if(dirStore.getState().dir.trim() === ''){
+                            window.alert("Choose the directory you worked before commit operations")
+                            setCommitLoader(false)
+                            return;
+                          }
+
+
+                          const checkStud = await axios.post(`${ipStore.getState().ip}/check`, {regNo : submitRegNo})
+                          if(checkStud.data.success === 2){
+                            window.alert("Checkyour register number or Try rejoining the server")
+                            setCommitLoader(false)
+                            return;
+                          }
                           
-                          const response = await window.electronApi.submitWorkSpace(dirStore.getState().dir, "demotest")
+                          const response = await window.electronApi.submitWorkSpace(dirStore.getState().dir, submitRegNo)
                           if (!response) {
                               console.log("Zipping failed");
                               window.alert("zipping failed or retry")
@@ -194,18 +214,10 @@ const JoinRoomForm: React.FC = () => {
                           commitFormData.append('regNo', submitRegNo)
 
                           try {
-                            const fileUploadResponse = await axios.post('http://localhost:5000/commit', commitFormData)
+                            const fileUploadResponse = await axios.post(`${ipStore.getState().ip}/commit`, commitFormData)
 
-                            switch(fileUploadResponse.data.success){
-                              case 1 : 
-                                console.log(fileUploadResponse.data.message)
-                                break
-                              case 2 : 
-                                console.log(fileUploadResponse.data.message) 
-                                break;
-                              case 3 : 
-                                console.log(fileUploadResponse.data.message)
-                                break;
+                            if(fileUploadResponse.data.success){
+                              window.alert(fileUploadResponse.data.message)
                             }
                           } catch (error) {
                               console.error("Commit failed:", error);

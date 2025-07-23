@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './SideBar.css';
 import { io } from 'socket.io-client';
+import { ipStore } from '../../../stores/ipStore';
 
 interface Client {
   id: string;
@@ -9,13 +10,16 @@ interface Client {
   startTime: string;
 }
 
-const Sidebar: React.FC = () => {
+type sideBarProps = {setClient : (val : Client) => void}
+
+const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
   useEffect(() => {
-    const soc = io('http://10.16.32.194:5000');
+    const soc = io(ipStore.getState().ip);
+    console.log(ipStore.getState().ip)
 
     soc.emit('admin-join');
 
@@ -67,7 +71,10 @@ const Sidebar: React.FC = () => {
           <div
             key={client.id}
             className={`client-item ${selectedClientId === client.id ? 'active' : ''}`}
-            onClick={() => setSelectedClientId(client.id)}
+            onClick={() => {
+              setSelectedClientId(client.regNo)
+              setClient(client)
+            }}
           >
             <div className="client-index">{index + 1}.</div>
             <div className="client-info">

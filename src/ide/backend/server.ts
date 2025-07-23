@@ -4,6 +4,7 @@ import {Server} from 'socket.io';
 import { createServer } from "http";
 import multer from 'multer'
 import path from 'path';
+import fs from 'fs'
 import cors from 'cors'
 
 export const startServer = (
@@ -77,32 +78,44 @@ export const startServer = (
         res.status(200).json({test : "success"})
     })
 
-
-    //Zip file handling
-    const zipFileStorage = multer.diskStorage({
-        destination : storageDir,
-        filename : (req, file, cb) => {
-            cb(null, req.body.regNo + '-' + roomId + '.zip')
+    app.post("/check", (req : Request, res : Response) => {
+        try {     
+            const {regNo} = req.body
+            if(joinedStudentsList.has(regNo))
+                return res.status(200).json({success : 1})
+            return res.status(200).json({success : 2})
+        } catch (error) {
+            console.log(error)
+            return res.status(404).json({message : error})
         }
     })
 
-    const zipUpload = multer({storage : zipFileStorage})
+
+
+    const zipUpload = multer({dest : storageDir})
 
     app.post("/commit", zipUpload.single('zipfile'),(req : Request, res : Response) => {
-        const { regNo } = req.body
-        const uploadedZipFile = req.file
+        try {
+            
+            const { regNo } = req.body
+            const uploadedZipFile = req.file
 
-        if(!joinedStudentsList.has(regNo))
-            return res.status(200).json({success : 1, message : `${regNo} is not joined in the room, Either wrong register number or Try rejoining`})
+            if(!joinedStudentsList.has(regNo))
+                return res.status(200).json({success : 1, message : `${regNo} is not joined in the room, Either wrong register number or Try rejoining`})
 
-        if(!uploadedZipFile)
-            return res.status(200).json({success : 2, message : 'Missing Zip file'})
+            if(!uploadedZipFile)
+                return res.status(200).json({success : 2, message : 'Missing Zip file'})
 
-        console.log("📁 File saved at:", path.join(storageDir, uploadedZipFile.filename));
-        console.log(regNo)
+            const newFileName = `${regNo}-${roomId}.zip`
+            const newPath = path.join(storageDir, newFileName)
 
-         return res.status(200).json({ success : 3, message: "Commit received successfully" });
+            fs.renameSync(uploadedZipFile.path, newPath)
 
+            return res.status(200).json({ success : 3, message: "Commit received successfully" });
+        } catch (error) {
+            console.log(error)
+            return res.status(404).json({message : error})
+        }
     })
 
     labXSever.listen(parseInt(portNo), '0.0.0.0',() => {

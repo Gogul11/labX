@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { ipStore } from "../../stores/ipStore";
 
 const HostRoomForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -34,6 +35,7 @@ const HostRoomForm: React.FC = () => {
       return;
     }
 
+    ipStore.getState().setIp(`http://${ip}:${port}`)
     setErrors({});
     window.electronApi.startServer(roomId, name, port, adminDir);
     console.log(name, roomId, port, staffId)

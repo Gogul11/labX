@@ -5,36 +5,10 @@ import ClientFolderView from './FolderView/clientFolder';
 import type { Client } from '../../types/types';
 import Editor from './Editor/EditorHost';
 
-const dummyClients: Client[] = [
-  {
-    id: '1',
-    name: 'Gogul',
-    regNo: '2023115020',
-    isOnline: true,
-    basePath: '/home/gogul', 
-    folderStructure: [{ name: 'myFolder', files: ['Lab2.c', 'Lab3.c', 'Report.txt'] }]
-  },
-  {
-    id: '2',
-    name: 'Mohan',
-    regNo: '2023115026',
-    isOnline: false,
-    basePath: '/home/mohan',
-    folderStructure: [{ name: 'Lab_Assess', files: ['Task1.py'] }]
-  },
-  {
-    id: '3',
-    name: 'Sankar',
-    regNo: '2023115074',
-    isOnline: true,
-    basePath: '/home/sankar', 
-    folderStructure: [{name: 'my-work', files: ['Lab1.cpp', 'Lab2.cpp']}]
-  }
-];
 
 const HostDashboard: React.FC = () => {
-  const [clients] = useState<Client[]>(dummyClients);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(clients[0]);
+
+  const [selectedClient, setSelectedClient] = useState<Client>();
 
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [sidebarWidth, setSidebarWidth] = useState(350);
@@ -89,7 +63,7 @@ const HostDashboard: React.FC = () => {
       <div className="main-content">
         {sidebarVisible && (
           <div className="sidebar-container" style={{ width: sidebarWidth }}>
-            <Sidebar/>
+            <Sidebar setClient={setSelectedClient}/>
             <div className="sidebar-resizer" onMouseDown={handleMouseDown} />
           </div>
         )}
