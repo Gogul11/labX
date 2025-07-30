@@ -31,6 +31,9 @@ contextBridge.exposeInMainWorld('electronApi', {
     startServer : (
             roomId : string,
             roomName : string,
-            portNo : string
-        ) => ipcRenderer.invoke('start-server', roomId, roomName, portNo)
+            portNo : string,
+            storageDir : string
+        ) => ipcRenderer.invoke('start-server', roomId, roomName, portNo, storageDir),
+
+    readZipContent : (zipFilePath : string) => ipcRenderer.invoke('read-zip-file', zipFilePath) 
 })

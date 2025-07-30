@@ -1,81 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SideBar.css';
-import type { Client } from '../../../types/types';
-import { FiFilter } from 'react-icons/fi';
+import { io } from 'socket.io-client';
+import { ipStore } from '../../../stores/ipStore';
 
-interface Props {
-  clients: Client[];
-  onSelectClient: (client: Client) => void;
-  selectedClientId: string | null;
+interface Client {
+  id: string;
+  name: string;
+  regNo: string;
+  startTime: string;
 }
 
-type FilterStatus = 'all' | 'online' | 'offline';
+type sideBarProps = {setClient : (val : Client) => void}
 
-const Sidebar: React.FC<Props> = ({ clients, onSelectClient, selectedClientId }) => {
+const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
+  const [clients, setClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
-  const filteredClients = clients.filter(client => {
-    const matchesName = client.name.toLowerCase().includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    const soc = io(ipStore.getState().ip);
+    console.log(ipStore.getState().ip)
 
-    if (filterStatus === 'online') return matchesName && client.isOnline;
-    if (filterStatus === 'offline') return matchesName && !client.isOnline;
-    return matchesName;
-  });
+    soc.emit('admin-join');
+
+    soc.on('joined-studs', ({ name, regNo }) => {
+      const newClient: Client = {
+        id: `${regNo}-${Date.now()}`,
+        name,
+        regNo,
+        startTime: new Date().toISOString(),
+      };
+      setClients(prev => [...prev, newClient]);
+    });
+
+    return () => {
+      soc.disconnect();
+    };
+  }, []);
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  };
+
+  const trimmedSearch = searchTerm.trim().toLowerCase();
+
+  const filteredClients = clients.filter(client =>
+    client.name.toLowerCase().includes(trimmedSearch) ||
+    client.regNo.toLowerCase().includes(trimmedSearch)
+  );
 
   return (
     <div className="sidebar">
-      <div className="sidebar-header">Connected Students</div>
+      <div className="sidebar-header">
+        Connected Students <span className="student-count">({clients.length})</span>
+      </div>
 
       <div className="search-bar-container">
         <input
           type="text"
           className="search-input"
-          placeholder="Search students..."
+          placeholder="Search by name or reg no..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <div className="filter-container">
-          <button
-            className="filter-button"
-            onClick={() => setShowDropdown(prev => !prev)}
-            title="Filter Students"
-          >
-            <FiFilter size={18} />
-          </button>
-          {showDropdown && (
-            <div className="filter-dropdown">
-              <div
-                className={`filter-option ${filterStatus === 'online' ? 'selected' : ''}`}
-                onClick={() => {
-                  setFilterStatus('online');
-                  setShowDropdown(false);
-                }}
-              >
-                Online
-              </div>
-              <div
-                className={`filter-option ${filterStatus === 'offline' ? 'selected' : ''}`}
-                onClick={() => {
-                  setFilterStatus('offline');
-                  setShowDropdown(false);
-                }}
-              >
-                Offline
-              </div>
-              <div
-                className={`filter-option ${filterStatus === 'all' ? 'selected' : ''}`}
-                onClick={() => {
-                  setFilterStatus('all');
-                  setShowDropdown(false);
-                }}
-              >
-                All
-              </div>
-            </div>
-          )}
-        </div>
       </div>
 
       <div className="client-list">
@@ -83,14 +71,19 @@ const Sidebar: React.FC<Props> = ({ clients, onSelectClient, selectedClientId })
           <div
             key={client.id}
             className={`client-item ${selectedClientId === client.id ? 'active' : ''}`}
-            onClick={() => onSelectClient(client)}
+            onClick={() => {
+              setSelectedClientId(client.regNo)
+              setClient(client)
+            }}
           >
-            <div className="client-status">
-              <span className={`status-dot ${client.isOnline ? 'online' : 'offline'}`} />
-            </div>
             <div className="client-index">{index + 1}.</div>
-            <div className="client-name">{client.name}</div>
-            <div className="client-reg">{client.regNo}</div>
+            <div className="client-info">
+              <div className="text-black/90 font-medium">{client.regNo}</div>
+              <div className="text-green-500">{client.name}</div>
+              <div className="client-time">
+                Joined at: <span>{formatTime(client.startTime)}</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>

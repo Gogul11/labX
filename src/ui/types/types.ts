@@ -2,9 +2,7 @@ export interface Client {
   id: string;
   name: string;
   regNo: string;
-  folderStructure: Folder[];
-  isOnline: boolean; 
-  basePath : string
+  startTime: string;
 }
 
 export interface Folder {

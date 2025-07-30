@@ -23,9 +23,11 @@ export interface apiType {
 
     saveAllTrigger : (func : () => void) => void,
 
-    submitWorkSpace : (folderPath : string, outputFolderName : string) => Promise<boolean>,
+    submitWorkSpace : (folderPath : string, outputFolderName : string) => Promise<string>,
 
-    startServer : (roomId : string, roomName : string, portNo : string) => Promise<boolean>
+    startServer : (roomId : string, roomName : string, portNo : string, storageDir : string) => Promise<boolean>,
+
+    readZipContent : (zipFilePath : string) => Promise<Blob>
 }
 
 declare global {
