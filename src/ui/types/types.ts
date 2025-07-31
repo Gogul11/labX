@@ -3,6 +3,9 @@ export interface Client {
   name: string;
   regNo: string;
   startTime: string;
+  endTime ?: string
+  status : 'active' | 'ended';
+  zippedPath ?: string;
 }
 
 export interface Folder {

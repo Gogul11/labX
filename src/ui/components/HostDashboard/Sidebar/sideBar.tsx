@@ -9,7 +9,8 @@ interface Client {
   regNo: string;
   startTime: string;
   endTime ?: string
-  status : 'active' | 'ended'
+  status : 'active' | 'ended',
+  zippedPath ?: string
 }
 
 type sideBarProps = {setClient : (val : Client) => void}

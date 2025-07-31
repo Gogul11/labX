@@ -3,9 +3,10 @@ import express, {type Request, type Response} from 'express'
 import {Server} from 'socket.io';
 import { createServer } from "http";
 import multer from 'multer'
-import path from 'path';
+import path, { join } from 'path';
 import fs from 'fs'
 import cors from 'cors'
+import AdmZip from 'adm-zip';
 
 export const startServer = (
     _event : IpcMainInvokeEvent,
@@ -33,10 +34,11 @@ export const startServer = (
 
     const joinedStudentsList = new Map<
             string,
-            { name: string; rollNo: string; startTime: Date; endTime?: Date, status : "active" | "ended" }
+            { name: string; rollNo: string; startTime: Date; endTime?: Date, status : "active" | "ended", zippedPath ?: string }
             >();
     
     io.on('connection', (socket) => {
+        //Student-join
         socket.on('join', ({name, regNo, roomId}) => {
             if(roomId !== currentRoomId){
                 socket.disconnect(true)
@@ -73,6 +75,7 @@ export const startServer = (
             
         })
 
+        //end-student
         socket.on('end-session', ({regNo}) => {
             console.log(regNo)
             const stud = joinedStudentsList.get(regNo)
@@ -96,6 +99,7 @@ export const startServer = (
 
         })
         
+        //admin-join
         socket.on('admin-join', () => {
             adminSocketId = socket.id
             socket.join('admin-room')
@@ -105,11 +109,13 @@ export const startServer = (
     })
 
 
+    //test for development
     app.get("/test", (req : Request, res : Response) => {
         console.log(joinedStudentsList)
         res.status(200).json({test : "success"})
     })
 
+    //Checks whether a student is present in the room or not
     app.post("/check", (req : Request, res : Response) => {
         try {     
             const {regNo} = req.body
@@ -124,6 +130,7 @@ export const startServer = (
 
 
 
+    //Comitin logic
     const zipUpload = multer({dest : storageDir})
 
     app.post("/commit", zipUpload.single('zipfile'),(req : Request, res : Response) => {
@@ -138,11 +145,27 @@ export const startServer = (
             if(!uploadedZipFile)
                 return res.status(200).json({success : 2, message : 'Missing Zip file'})
 
-            const newFileName = `${regNo}-${roomId}.zip`
+            const newFileName = `${regNo}-${roomId}`
             const newPath = path.join(storageDir, newFileName)
 
-            fs.renameSync(uploadedZipFile.path, newPath)
+            // fs.renameSync(uploadedZipFile.path, newPath)
+            if(!fs.existsSync(newPath)){
+                fs.mkdirSync(newPath, {recursive : true})
+            }
 
+            const admZip = new AdmZip(uploadedZipFile.path)
+            admZip.extractAllTo(newPath, true)
+
+            fs.unlinkSync(uploadedZipFile.path)
+
+            const exsisting = joinedStudentsList.get(regNo)
+            if(exsisting){
+                joinedStudentsList.set(regNo, {
+                    ...exsisting,
+                    zippedPath : newPath
+                })
+            }
+            
             return res.status(200).json({ success : 3, message: "Commit received successfully" });
         } catch (error) {
             console.log(error)
