@@ -37,11 +37,7 @@ const SideBar = () => {
       case 'chat':
         return <Chat username={'Hii'} />;
       case 'connect':
-        return <Room onJoin={function (): void {
-          throw new Error('Function not implemented.');
-        } } onHost={function (): void {
-          throw new Error('Function not implemented.');
-        } } />
+        return <Room />
       default:
         return null;
     }

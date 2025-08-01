@@ -79,6 +79,15 @@ const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
     return matchesSearch && matchesStatus;
   });
 
+  const handleStudentOnClick = (client : Client) => {
+    setSelectedClientId(client.regNo)
+    setClient(client)
+    const soc = io(ipStore.getState().ip);
+
+    soc.emit('get-student-folder', client.regNo)
+    console.log('hi this is side bar onclick')
+  }
+
 
 
   return (
@@ -132,10 +141,7 @@ const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
           <div
             key={client.id}
             className={`client-item ${selectedClientId === client.id ? 'active' : ''}`}
-            onClick={() => {
-              setSelectedClientId(client.regNo)
-              setClient(client)
-            }}
+            onClick={() => handleStudentOnClick(client)}
           >
             <div className="client-info">
               <div className="text-black/90 font-medium">{client.regNo}</div>

@@ -75,6 +75,22 @@ export const startServer = (
             
         })
 
+        //get student join
+        socket.on('get-student-folder', (regNo) => {
+            console.log('get-student-folder', regNo);
+
+            const student = joinedStudentsList.get(regNo);
+
+            if (!student) {
+                socket.emit('student-not-found');
+            } else if (!student.zippedPath) {
+                socket.emit('student-folder-not-found');
+            } else {
+                socket.emit('student-folder-found', student.zippedPath);
+            }
+        });
+
+
         //end-student
         socket.on('end-session', ({regNo}) => {
             console.log(regNo)
@@ -127,6 +143,7 @@ export const startServer = (
             return res.status(404).json({message : error})
         }
     })
+
 
 
 

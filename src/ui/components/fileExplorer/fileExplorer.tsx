@@ -36,34 +36,34 @@ const FolderExplorer = () => {
 	// const closeSideBar = sideBarStore((state) => state.toggle)
 
 	//Function for fetching files and folders from the directory NOTE : Don't touch this
-const refresh = (customDir?: string) => {
-	const refreshPath = customDir || dir;
+	const refresh = (customDir?: string) => {
+		const refreshPath = customDir || dir;
 
-	fetchFolder(refreshPath)
-		.then((data) => {
-			setTree(data);
-			setFetch(false);
-		})
-		.catch((_err: any) => {
-			// Try refreshing parent instead
-			const parentDir = refreshPath.split('/').slice(0, -1).join('/');
-			if (parentDir && parentDir !== refreshPath) {
-				fetchFolder(parentDir)
-					.then((data) => {
-						setTree(data);
-						setSelectedPath({ val: parentDir, isDir: true });
-						setFetch(false);
-					})
-					.catch((_e: any) => {
-						window.alert("Oops, Error while fetching!");
-						setFetch(false);
-					});
-			} else {
-				window.alert("Oops, Error while fetching!");
+		fetchFolder(refreshPath)
+			.then((data) => {
+				setTree(data);
 				setFetch(false);
-			}
-		});
-};
+			})
+			.catch((_err: any) => {
+				// Try refreshing parent instead
+				const parentDir = refreshPath.split('/').slice(0, -1).join('/');
+				if (parentDir && parentDir !== refreshPath) {
+					fetchFolder(parentDir)
+						.then((data) => {
+							setTree(data);
+							setSelectedPath({ val: parentDir, isDir: true });
+							setFetch(false);
+						})
+						.catch((_e: any) => {
+							window.alert("Oops, Error while fetching!");
+							setFetch(false);
+						});
+				} else {
+					window.alert("Oops, Error while fetching!");
+					setFetch(false);
+				}
+			});
+	};
 
 	
 
