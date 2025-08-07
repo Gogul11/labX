@@ -74,6 +74,7 @@ const JoinRoomForm: React.FC = () => {
           setLoader(false)
           setJoined(true)
           roomIdStore.getState().setRoomId(formData.roomId)
+          setSubmitRegNo(formData.regNo)
       })
 
       soc.on('join-failed', ({message}) => {
@@ -113,6 +114,15 @@ const JoinRoomForm: React.FC = () => {
     setSubmited(false)
     roomIdStore.getState().roomId = ''
     soc.emit('end-session', {regNo : submitRegNo})
+        setFormData({
+      name : "",
+      regNo : "",
+      roomId : ""
+    })
+    setIp("")
+    setPortNo("")
+    setSubmitRegNo("")
+    ipStore.getState().setIp("");
   }
 
   return (
@@ -168,19 +178,6 @@ const JoinRoomForm: React.FC = () => {
       </form>
       :
           <div className="mt-4 px-4">
-            <div>
-              <input
-                type="text"
-                onChange={(e) => setSubmitRegNo(e.target.value)}
-                value={submitRegNo}
-                className={`w-full px-3 py-2 border rounded ${
-                  !isSubmitRegNoValid ?  "border-red-500" : "border-gray-300"
-                }`}
-              />
-              {!isSubmitRegNoValid && (
-                <div className="text-sm text-red-600 mt-1">Register Number required</div>
-              )}
-            </div>
             {!submited && 
               <button 
                 disabled={!isSubmitRegNoValid || commitLoader || submited}
