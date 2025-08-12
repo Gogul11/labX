@@ -6,6 +6,8 @@ import type { Client } from '../../types/types';
 import Editor from './Editor/EditorHost';
 import { roomNameStore } from '../../stores/roomNameStore';
 import { roomIdStore } from '../../stores/roomIdStore';
+import axios from 'axios';
+import { ipStore } from '../../stores/ipStore';
 
 const HostDashboard: React.FC = () => {
   const [selectedClient, setSelectedClient] = useState<Client>();
@@ -22,6 +24,35 @@ const HostDashboard: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleBroadcast = async () => {
+    if (!file) return alert("Please select a file first");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    await axios.post(`${ipStore.getState().ip}/upload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }).then((res) => {
+      if(res.data.success){
+        alert("File sent successfully")
+      }
+    }).catch((err) => {
+      console.log(err)
+      alert(`Something went wrong ${err.message}`)
+    });
+  };
+
+
   return (
     <div className="flex flex-col h-screen  text-[#abb2bf]">
       {/* Header */}
@@ -34,7 +65,8 @@ const HostDashboard: React.FC = () => {
           Room ID: <span>{roomIdStore.getState().roomId}</span>
         </div>
         <div className="flex gap-2">
-          <button className="bg-[#3e4451] text-white text-sm px-3 py-1">Broadcast File</button>
+          <input type='file' onChange={handleFileChange} className="bg-[#3e4451] text-white text-sm px-3 py-1"/>
+          <button onClick={handleBroadcast} className="bg-[#3e4451] text-white text-sm px-3 py-1">Broadcast</button>
           <button className="bg-[#3e4451] text-white text-sm px-3 py-1">Announcements</button>
           <button className="bg-[#3e4451] text-white text-sm px-3 py-1">Timer</button>
         </div>

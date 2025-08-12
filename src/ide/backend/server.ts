@@ -8,6 +8,11 @@ import fs from 'fs'
 import cors from 'cors'
 import AdmZip from 'adm-zip';
 
+interface FileData {
+  name: string;
+  url: string;
+}
+
 export const startServer = (
     _event : IpcMainInvokeEvent,
     roomId : string,
@@ -36,6 +41,8 @@ export const startServer = (
             string,
             { name: string; rollNo: string; startTime: Date; endTime?: Date, status : "active" | "ended", zippedPath ?: string }
             >();
+
+    const broadcastedFiles : FileData[]= [];
     
     io.on('connection', (socket) => {
         //Student-join
@@ -201,6 +208,47 @@ export const startServer = (
             return res.status(404).json({message : error})
         }
     })
+
+    const upload = path.join(storageDir, 'uploads')
+    if(!fs.existsSync(upload)){
+        fs.mkdirSync(upload)
+    }
+
+    const broadCastedUpload = multer({dest : upload})
+    app.use("/files", express.static(upload));
+
+    app.post("/upload", broadCastedUpload.single("file"), (req: Request, res: Response) => {
+        try{
+
+            if (!req.file) {
+                return res.status(400).json({ error: "No file uploaded" });
+            }
+            const newPath = path.join(upload, req.file.originalname)
+             fs.renameSync(req.file.path, newPath)
+            const fileData = {
+                name: req.file.originalname,
+                url: `/files/${req.file.originalname}`
+            };
+            
+            broadcastedFiles.push(fileData)
+            
+            res.status(200).json({success : true});
+        }
+        catch(err){
+            console.log(err)
+            return res.status(404).json({message : err})
+        }
+    });
+
+    app.get('/getFiles', (req : Request, res : Response) => {
+        try {
+            return res.status(200).json({success : true, files : broadcastedFiles})
+        } catch (error) {
+            return res.status(404).json({message : error})
+        }
+    })
+
+
 
     labXSever.listen(parseInt(portNo), '0.0.0.0',() => {
         console.log("server is running", portNo)

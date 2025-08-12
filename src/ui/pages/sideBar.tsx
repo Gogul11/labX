@@ -10,9 +10,12 @@ import FileExplorer from '../components/fileExplorer/fileExplorer';
 import { selectedPathStore } from '../stores/selectedPathStore';
 import { dirStore } from '../stores/directoryStore';
 import { sideBarStore } from '../stores/sideBarStore';
+import  Download from '../components/Download'
+import { FaDownload } from "react-icons/fa";
 
 // Optional: enum for tab keys
-type Tab = 'files' | 'open' | 'chat' | 'connect';
+type Tab = 'files' | 'open' | 'chat' | 'connect' | 'download';
+
 
 
 const SideBar = () => {
@@ -37,14 +40,11 @@ const SideBar = () => {
         })();
         return null;
       case 'chat':
-        (async () => {
-          const response = await window.electronApi.submitWorkSpace(dirStore.getState().dir, "demoTest")
-          if (response) console.log("success")
-          else console.log("fail")
-        })();
         return <Chat username={'Hii'} />;
       case 'connect':
         return <Room />
+      case 'download':
+        return <Download/>
       default:
         return null;
     }
@@ -80,6 +80,9 @@ const SideBar = () => {
         </button>
         <button onClick={() => setActiveTab('connect')}>
           <VscVmConnect size={28} className={activeTab === 'connect' ? 'text-yellow-300' : ''} />
+        </button>
+        <button onClick={() => setActiveTab('download')}>
+          <FaDownload size={28} className={activeTab === 'download' ? 'text-yellow-300' : ''} />
         </button>
       </div>
     </div>
