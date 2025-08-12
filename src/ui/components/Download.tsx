@@ -35,8 +35,7 @@ const Download: React.FC = () => {
     <div className="flex flex-col gap-4 m-2">
       {/* File List */}
       <div className="w-full flex justify-center">
-        {/* <button onClick={handleGetFiles}>Refresh</button> */}
-        <div className="bg-indigo-700 w-[60%] h-10 rounded-lg hover:cursor-pointer flex justify-center items-center">
+        <div onClick={handleGetFiles} className="bg-indigo-700 w-[60%] h-10 rounded-lg hover:cursor-pointer flex justify-center items-center">
           <p className="text-white">Get Files</p>
         </div>
       </div>
