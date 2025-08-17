@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styles/Chat.css";
-import type {  Message } from "../types/types";
 import { regNoStore } from "../stores/regNoStore";
 import { ipStore } from "../stores/ipStore";
 import { io, Socket } from "socket.io-client";
@@ -13,24 +12,10 @@ const ChatSidebar: React.FC = () => {
   const socketRef = useRef<Socket | null>(null);
 
   const messages = ChatStore((state) => state.message)
-  const setMessages = ChatStore((state) => state.setMessage)
 
   useEffect(() => {
     const socket = io(ipStore.getState().ip);
     socketRef.current = socket;
-
-    socket.on("messageReply", (msg, roll) => {
-      console.log(msg, roll)
-      const now = new Date();
-      const repMsg: Message = {
-        id: crypto.randomUUID(),
-        sender: roll,
-        content: msg,
-        timestamp: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        isSelf: roll === regNoStore.getState().regNo ? true : false,
-      };
-      setMessages(repMsg);
-    });
 
     return () => {
       socket.disconnect();
@@ -43,16 +28,6 @@ const ChatSidebar: React.FC = () => {
 
   const handleSend = () => {
     if (input.trim() && socketRef.current) {
-      const now = new Date();
-      const newMsg: Message = {
-        id: crypto.randomUUID(),
-        sender: regNoStore.getState().regNo,
-        content: input,
-        timestamp: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        isSelf: true,
-      };
-      setMessages(newMsg);
-
       socketRef.current.emit("chatMessage", {
         roll: regNoStore.getState().regNo,
         message: input,
@@ -72,14 +47,14 @@ const ChatSidebar: React.FC = () => {
           <p className="text-white text-lg ">Join a room to download files</p>
         </div>
       )
-    }
+  }
 
   return (
     <div className="chat-sidebar">
       <div className="chat-header">Orca Chat</div>
 
       <div className="chat-messages">
-        {messages.map((msg) => (
+        {ChatStore.getState().message.map((msg) => (
           <div
             key={msg.id}
             className={`chat-message ${msg.isSelf ? "self" : "other"}`}

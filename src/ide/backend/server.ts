@@ -3,7 +3,7 @@ import express, {type Request, type Response} from 'express'
 import {Server} from 'socket.io';
 import { createServer } from "http";
 import multer from 'multer'
-import path, { join } from 'path';
+import path from 'path';
 import fs from 'fs'
 import cors from 'cors'
 import AdmZip from 'adm-zip';
@@ -16,7 +16,7 @@ interface FileData {
 export const startServer = (
     _event : IpcMainInvokeEvent,
     roomId : string,
-    roomName : string,
+    _roomName : string,
     portNo : string,
     storageDir : string
 ) => {
@@ -150,7 +150,7 @@ export const startServer = (
 
 
     //test for development
-    app.get("/test", (req : Request, res : Response) => {
+    app.get("/test", (_req : Request, res : Response) => {
         console.log(joinedStudentsList)
         res.status(200).json({test : "success"})
     })
@@ -245,7 +245,7 @@ export const startServer = (
         }
     });
 
-    app.get('/getFiles', (req : Request, res : Response) => {
+    app.get('/getFiles', (_req : Request, res : Response) => {
         try {
             return res.status(200).json({success : true, files : broadcastedFiles})
         } catch (error) {
