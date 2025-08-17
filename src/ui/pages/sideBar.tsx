@@ -11,6 +11,7 @@ import { dirStore } from '../stores/directoryStore';
 import { sideBarStore } from '../stores/sideBarStore';
 import  Download from '../components/Download'
 import { FaDownload } from "react-icons/fa";
+import Timer from "../components/Time";
 
 const SideBar = () => {
 
@@ -45,6 +46,7 @@ const SideBar = () => {
         return <Room tab="host"/>
       case 'download':
         return <Download/>
+        // return <Timer/>
       default:
         return null;
     }
