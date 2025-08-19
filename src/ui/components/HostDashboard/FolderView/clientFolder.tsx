@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import type { Client } from '../../../types/types';
 import Content from '../../fileExplorer/content';
 import { fetchFolder, openFolder } from '../../../utils/flileExplorer';
-import { io } from 'socket.io-client';
 import { ipStore } from '../../../stores/ipStore';
+import { getSocket } from '../../../utils/Socket';
 
 interface Props {
   client?: Client;
@@ -25,7 +25,7 @@ const ClientFolderView: React.FC<Props> = ({ client }) => {
   const [notSubmited, setNotSubmited] = useState<boolean>(false)
 
   useEffect(() => {
-    const soc = io(ipStore.getState().ip);
+    const soc = getSocket(ipStore.getState().ip)
 
     if (client) {
       const { regNo } = client;

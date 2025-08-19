@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { io } from "socket.io-client";
 import { dirStore } from "../../stores/directoryStore";
 import axios from 'axios'
 import { ipStore } from "../../stores/ipStore";
 import { roomIdStore } from "../../stores/roomIdStore";
 import { regNoStore } from "../../stores/regNoStore";
+import { getSocket } from "../../utils/Socket";
 
 const JoinRoomForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -64,7 +64,7 @@ const JoinRoomForm: React.FC = () => {
     if (isFormValid) {
       ipStore.getState().setIp(`http://${ip}:${portNo}`)
 
-      const soc = io(ipStore.getState().ip);
+      const soc = getSocket(ipStore.getState().ip)
       
       soc.emit('join', formData)
       setLoader(true)
@@ -108,7 +108,7 @@ const JoinRoomForm: React.FC = () => {
   );
 
   const handleEndSession = async() => {
-    const soc = io(ipStore.getState().ip);
+    const soc = getSocket(ipStore.getState().ip)
     setJoined(false)
     setSubmited(false)
     roomIdStore.getState().roomId = ''

@@ -10,8 +10,11 @@ import { ActivePathStore } from '../stores/activePathStore';
 import { ModifiedFileStore } from '../stores/modifiedFileStore';
 import SideBar from './sideBar';
 import { welcomePageStore } from '../stores/welcomePageStore';
+import { useSocket } from '../utils/soc';
 
 const EditorPage = () => {
+
+   useSocket(); 
 
     
     //stores

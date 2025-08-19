@@ -4,23 +4,18 @@ import { regNoStore } from "../stores/regNoStore";
 import { ipStore } from "../stores/ipStore";
 import { io, Socket } from "socket.io-client";
 import { ChatStore } from "../stores/chatStore";
+import type { Message } from "../types/types";
+import { useSocket } from "../utils/soc";
 
 const ChatSidebar: React.FC = () => {
 
   const [input, setInput] = useState("");
   const messageEndRef = useRef<HTMLDivElement>(null);
-  const socketRef = useRef<Socket | null>(null);
 
   const messages = ChatStore((state) => state.message)
+  const setMessages = ChatStore((state) => state.setMessage)
 
-  useEffect(() => {
-    const socket = io(ipStore.getState().ip);
-    socketRef.current = socket;
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  const socketRef = useSocket();
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,6 +27,21 @@ const ChatSidebar: React.FC = () => {
         roll: regNoStore.getState().regNo,
         message: input,
       });
+      console.log(input)
+
+      const now = new Date();
+      const sendMsg: Message = {
+        id: crypto.randomUUID(),
+        sender: regNoStore.getState().regNo,
+        content: input,
+        timestamp: now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        isSelf: true ,
+      }
+
+      setMessages(sendMsg)
 
       setInput("");
     }
@@ -54,7 +64,7 @@ const ChatSidebar: React.FC = () => {
       <div className="chat-header">Orca Chat</div>
 
       <div className="chat-messages">
-        {ChatStore.getState().message.map((msg) => (
+        {messages.map((msg) => (
           <div
             key={msg.id}
             className={`chat-message ${msg.isSelf ? "self" : "other"}`}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './SideBar.css';
-import { io } from 'socket.io-client';
 import { ipStore } from '../../../stores/ipStore';
 import { LuRefreshCcw } from "react-icons/lu";
+import { getSocket } from '../../../utils/Socket';
 
 interface Client {
   id: string;
@@ -24,7 +24,7 @@ const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
 
 
   useEffect(() => {
-    const soc = io(ipStore.getState().ip);
+    const soc = getSocket(ipStore.getState().ip)
     console.log(ipStore.getState().ip)
 
     soc.emit('admin-join');
@@ -83,14 +83,14 @@ const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
   const handleStudentOnClick = (client : Client) => {
     setSelectedClientId(client.regNo)
     setClient(client)
-    const soc = io(ipStore.getState().ip);
+    const soc = getSocket(ipStore.getState().ip)
 
     soc.emit('get-student-folder', client.regNo)
     console.log('hi this is side bar onclick')
   }
 
   const handleRefresh = () => {
-    const soc = io(ipStore.getState().ip);
+    const soc = getSocket(ipStore.getState().ip)
     console.log('refreshed')
     soc.emit('refresh-students')
   }
