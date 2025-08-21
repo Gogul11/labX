@@ -1,6 +1,7 @@
 import { Editor } from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
 import { EditorMapsStore } from '../stores/editorsMap';
+import Loader from './loader';
 
 type propsType = {
   theme ?: string,
@@ -46,6 +47,7 @@ const LabXEditor : React.FC<propsType> = ({theme, value, ext, path, read}) => {
           readOnly:read
         }}
         onChange={(val) => setVal(val ?? '')}
+        loading={<Loader message='Opening File'/>}
       />
     </div>
   );

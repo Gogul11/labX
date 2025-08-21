@@ -45,6 +45,7 @@ export const startServer = (
     const broadcastedFiles : FileData[]= [];
     
     io.on('connection', (socket) => {
+        console.log(socket.id)
         //Student-join
         socket.on('join', ({name, regNo, roomId}) => {
             if(roomId !== currentRoomId){

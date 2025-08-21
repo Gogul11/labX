@@ -9,10 +9,8 @@ import { GiDolphin } from "react-icons/gi";
 import { ActivePathStore } from '../stores/activePathStore';
 import { ModifiedFileStore } from '../stores/modifiedFileStore';
 import SideBar from './sideBar';
-import { welcomePageStore } from '../stores/welcomePageStore';
 import { useSocket } from '../utils/soc';
-import { GrInProgress } from "react-icons/gr";
-
+import { TfiTimer } from "react-icons/tfi";
 
 const EditorPage = () => {
 
@@ -92,7 +90,7 @@ const EditorPage = () => {
                 <div className={`h-[96%] ${isSideBarOpen && 'w-[20%]'}`}>
                     {isSideBarOpen && <SideBar />}
                 </div>
-                {welcomePageStore.getState().isOpen ? 
+                {Object.entries(openedEditors).length === 0 ? 
                         <div className={`h-[96%] ${isSideBarOpen ? 'w-[80%]' : 'w-full'}`}>
                             <WelcomeScreen/>
                         </div>
@@ -120,13 +118,14 @@ const EditorPage = () => {
                     <div className='w-[2%] mx-2 flex justify-center items-center hover:cursor-pointer'>
                         <button 
                             onClick={() => {
-                                    sideBarStore.getState().setAcitveTab('progress')
-                                    sideBarStore.getState().toggle()
+                                    sideBarStore.getState().setAcitveTab('timer')
+                                    !sideBarStore.getState().isOpen && sideBarStore.getState().toggle()
                                 }}
                             className={'hover:cursor-pointer text-white'}
                         >
-                            <GrInProgress size={20} />
+                            <TfiTimer size={22} />
                         </button>
+                        
                     </div>
                     <div className='w-[94%]  h-full hide-scrollbar '>
                          <OpenedEditors editors={openedEditors}/> 

@@ -7,6 +7,7 @@ import { dirStore } from '../../stores/directoryStore';
 import { dirListStore } from '../../stores/dirListStore';
 import { selectedPathStore } from '../../stores/selectedPathStore';
 import { EditorMapsStore } from '../../stores/editorsMap';
+import Loader from '../loader';
 // import { sideBarStore } from '../../stores/sideBarStore';
 
 type FileNode = {
@@ -249,7 +250,7 @@ return (
 			:
 			fetch ? (
 				// A small loading for the folders with larger no of file like multiple react projects Example : sankar's vs code
-				<p className='text-[#61afef] text-center mt-10 text-lg font-bold'>Fetching files for you....</p>
+				<Loader message='Fetching Your files'/>
 			) : (
 				<div 
 					className='flex-1 h-full'

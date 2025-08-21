@@ -47,9 +47,10 @@ const SideBar = () => {
         return <Room tab="host"/>
       case 'download':
         return <Download/>
-      case 'progress':
-        // return <Timer/>
+      case 'todo':
         return <TodoList/>
+      case 'timer':
+          return <Timer/>
       default:
         return null;
     }

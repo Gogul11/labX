@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-type Tab = 'files' | 'open' | 'chat' | 'connect' | 'download' | 'connectClient' | 'connectHost' | 'progress';
+type Tab = 'files' | 'open' | 'chat' | 'connect' | 'download' | 'connectClient' | 'connectHost' | 'timer' | 'todo';
 
 
 type SideBarState = {

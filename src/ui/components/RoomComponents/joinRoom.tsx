@@ -5,6 +5,7 @@ import { ipStore } from "../../stores/ipStore";
 import { roomIdStore } from "../../stores/roomIdStore";
 import { regNoStore } from "../../stores/regNoStore";
 import { getSocket } from "../../utils/Socket";
+import Loader from "../loader";
 
 const JoinRoomForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -171,73 +172,77 @@ const JoinRoomForm: React.FC = () => {
             type="submit"
             className="host-btn w-[80%]"
             >
-            {loader ? "Loading..." : "Join"}
+            {loader ? "Joining.." : "Join"}
           </button>
+          {loader && <Loader message="Joining.."/>}
         </div>
       </form>
       :
           <div className="mt-4 px-4">
             {!submited && 
-              <button 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-200 mt-4"
-                onClick={async() => {
-                            const submitRegNo = regNoStore.getState().regNo
-                            if (submitRegNo.trim() === '') return;
+              <>
+                <button 
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-200 mt-4"
+                  onClick={async() => {
+                              const submitRegNo = regNoStore.getState().regNo
+                              if (submitRegNo.trim() === '') return;
 
-                            setCommitLoader(true)
+                              setCommitLoader(true)
 
-                            if(dirStore.getState().dir.trim() === ''){
-                              window.alert("Choose the directory you worked before commit operations")
-                              setCommitLoader(false)
-                              return;
-                            }
-
-
-                            const checkStud = await axios.post(`${ipStore.getState().ip}/check`, {regNo : submitRegNo})
-                            if(checkStud.data.success === 2){
-                              window.alert("Checkyour register number or Try rejoining the server")
-                              setCommitLoader(false)
-                              return;
-                            }
-                            
-                            const response = await window.electronApi.submitWorkSpace(dirStore.getState().dir, submitRegNo)
-                            if (!response) {
-                                console.log("Zipping failed");
-                                window.alert("zipping failed or retry")
-                                setCommitLoader(false);
+                              if(dirStore.getState().dir.trim() === ''){
+                                window.alert("Choose the directory you worked before commit operations")
+                                setCommitLoader(false)
                                 return;
-                            }
-                            console.log("zipped at : ", response)
-
-                            const zipBlob = await window.electronApi.readZipContent(response)
-                            const zipBlobFile = new File([zipBlob], `${submitRegNo}.zip`, {
-                              type : 'application/zip'
-                            })
-
-                            const commitFormData = new FormData()
-
-                            commitFormData.append('zipfile', zipBlobFile)
-                            commitFormData.append('regNo', submitRegNo)
-
-                            try {
-                              const fileUploadResponse = await axios.post(`${ipStore.getState().ip}/commit`, commitFormData)
-
-                              if(fileUploadResponse.data.success){
-                                window.alert(fileUploadResponse.data.message)
-                                setSubmited(true)
                               }
-                            } catch (error) {
-                                console.error("Commit failed:", error);
-                                window.alert("Commit failed. Check your connection or try again.");
-                            }
-                            
-                            window.electronApi.deleteFileOrFolder(response);
-                            
-                            setCommitLoader(false)
-                }}
-              >
-                {commitLoader ? 'commiting..do not close tab' : 'Commit your code base to teacher' }
-              </button>
+
+
+                              const checkStud = await axios.post(`${ipStore.getState().ip}/check`, {regNo : submitRegNo})
+                              if(checkStud.data.success === 2){
+                                window.alert("Checkyour register number or Try rejoining the server")
+                                setCommitLoader(false)
+                                return;
+                              }
+                              
+                              const response = await window.electronApi.submitWorkSpace(dirStore.getState().dir, submitRegNo)
+                              if (!response) {
+                                  console.log("Zipping failed");
+                                  setCommitLoader(false);
+                                  window.alert("zipping failed or retry")
+                                  return;
+                              }
+                              console.log("zipped at : ", response)
+
+                              const zipBlob = await window.electronApi.readZipContent(response)
+                              const zipBlobFile = new File([zipBlob], `${submitRegNo}.zip`, {
+                                type : 'application/zip'
+                              })
+
+                              const commitFormData = new FormData()
+
+                              commitFormData.append('zipfile', zipBlobFile)
+                              commitFormData.append('regNo', submitRegNo)
+
+                              try {
+                                const fileUploadResponse = await axios.post(`${ipStore.getState().ip}/commit`, commitFormData)
+
+                                if(fileUploadResponse.data.success){
+                                  window.alert(fileUploadResponse.data.message)
+                                  setSubmited(true)
+                                }
+                              } catch (error) {
+                                  console.error("Commit failed:", error);
+                                  window.alert("Commit failed. Check your connection or try again.");
+                              }
+                              
+                              window.electronApi.deleteFileOrFolder(response);
+                              
+                              setCommitLoader(false)
+                  }}
+                >
+                  {commitLoader ? "commiting.. Do not close tab" : 'Commit your code base to teacher' }
+                </button>
+                {commitLoader && <Loader message={`commiting..\nDo not close tab`}/>}
+              </>
             }
             {submited && 
               <button 
