@@ -5,17 +5,16 @@ import WelcomeScreen from './welcomePage';
 import { sideBarStore } from '../stores/sideBarStore';
 import { currentPathStore } from '../stores/currentPathStore';
 import { EditorMapsStore } from '../stores/editorsMap';
-import { GiDolphin } from "react-icons/gi";
 import { ActivePathStore } from '../stores/activePathStore';
 import { ModifiedFileStore } from '../stores/modifiedFileStore';
 import SideBar from './sideBar';
-import { welcomePageStore } from '../stores/welcomePageStore';
 import { useSocket } from '../utils/soc';
+import BottomBar from '../components/bottomBar';
 
 const EditorPage = () => {
 
-   useSocket(); 
 
+    useSocket(); 
     
     //stores
     const toogleSideBar = sideBarStore((state) => state.toggle)
@@ -90,7 +89,7 @@ const EditorPage = () => {
                 <div className={`h-[96%] ${isSideBarOpen && 'w-[20%]'}`}>
                     {isSideBarOpen && <SideBar />}
                 </div>
-                {welcomePageStore.getState().isOpen ? 
+                {Object.entries(openedEditors).length === 0 ? 
                         <div className={`h-[96%] ${isSideBarOpen ? 'w-[80%]' : 'w-full'}`}>
                             <WelcomeScreen/>
                         </div>
@@ -108,14 +107,11 @@ const EditorPage = () => {
                             </div>
                         ))
                 )}
-                <div className='h-[4%] flex w-full absolute bottom-0 border'>
-                    <div 
-                      className='w-[6%] bg-indigo-600 h-full hide-scrollbar cursor-pointer flex justify-center items-center rounded-md'
-                      onClick={toogleSideBar}
-                    >
-                        <GiDolphin size={30}/>
+                <div className='h-[4%] flex w-full absolute bottom-0 border bg-blue-950'>
+                    <div className='w-[20%]'>
+                        <BottomBar/>
                     </div>
-                    <div className='w-[96%]  h-full hide-scrollbar '>
+                    <div className='w-[80%] h-full hide-scrollbar '>
                          <OpenedEditors editors={openedEditors}/> 
                     </div>
                 </div>

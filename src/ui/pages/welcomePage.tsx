@@ -8,6 +8,7 @@ import { LiaUserFriendsSolid } from "react-icons/lia";
 import { dirStore } from '../stores/directoryStore';
 import { selectedPathStore } from '../stores/selectedPathStore';
 import { sideBarStore } from '../stores/sideBarStore';
+import { GiDolphin } from 'react-icons/gi';
 
 interface WelcomeScreenProps {}
 
@@ -52,8 +53,9 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = () => {
       <div className="flex-1 flex flex-col items-center justify-center p-8">
         {/* ORCA Logo */}
         <div className="mb-12">
-          <div className="text-8xl font-bold text-indigo-600 mb-4 tracking-wider">
+          <div className="text-8xl font-bold text-indigo-600 mb-4 tracking-wider flex gap-4">
             ORCA
+            <GiDolphin className='animate-pulse'/>
           </div>
           <div className="text-center text-[#cccccc] text-lg">
             Coding made powerful

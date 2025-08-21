@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import "../styles/Chat.css";
 import { regNoStore } from "../stores/regNoStore";
 import { ipStore } from "../stores/ipStore";
-import { io, Socket } from "socket.io-client";
 import { ChatStore } from "../stores/chatStore";
 import type { Message } from "../types/types";
 import { useSocket } from "../utils/soc";
@@ -54,7 +53,7 @@ const ChatSidebar: React.FC = () => {
   if(ipStore.getState().ip === ''){
       return(
         <div className="h-full flex justify-center items-center">
-          <p className="text-white text-lg ">Join a room to download files</p>
+          <p className="text-white text-lg ">Join a room to Chat</p>
         </div>
       )
   }
