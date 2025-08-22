@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { ipStore } from "../../stores/ipStore";
 import { roomIdStore } from "../../stores/roomIdStore";
 import { roomNameStore } from "../../stores/roomNameStore";
-import { dirStore } from "../../stores/directoryStore";
+import { adminStore } from "../../stores/hostDirStore";
 
 const HostRoomForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -16,8 +16,8 @@ const HostRoomForm: React.FC = () => {
   const navigate = useNavigate();
 
   // const [adminDir, setAdminDir] = useState("")
-  const adminDir = dirStore(state => state.dir)
-  const setAdminDir = dirStore(state => state.setDir)
+  const adminDir = adminStore(state => state.dir)
+  const setAdminDir = adminStore(state => state.setDir)
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};

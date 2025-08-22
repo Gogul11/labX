@@ -228,7 +228,7 @@ useEffect(() => {
 	}, [])
 
 return (
-	<div className="h-full w-full bg-[#282c34] text-[#abb2bf]">
+	<div className="h-full w-full bg-[#1e1e1e] text-[#abb2bf]">
 
 		{/* TO open a folder */}
 		{(dir === null || dir === '') ? 

@@ -52,7 +52,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="w-full h-full bg-[#282c34] shadow-lg flex flex-col items-center relative">
+    <div className="w-full h-full shadow-lg flex flex-col items-center relative">
 
       
       <button
@@ -67,7 +67,7 @@ const SideBar = () => {
       </button>
 
       {/* Dynamic content area */}
-      <div className="bg-[#282c34]/50 h-[95%] w-[96%] overflow-y-auto hide-scrollbar m-2">
+      <div className="bg-[#1e1e1e] h-full w-full overflow-y-auto ">
         {renderTabContent()}
       </div>
     </div>

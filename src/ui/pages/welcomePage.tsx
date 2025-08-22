@@ -48,7 +48,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#1e1e1e] text-white flex">
+    <div className="min-h-screen bg-black text-white flex">
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-8">
         {/* ORCA Logo */}

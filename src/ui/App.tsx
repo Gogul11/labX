@@ -2,10 +2,21 @@ import { HashRouter, Routes, Route } from 'react-router';
 import EditorPage from './pages/editorPage';
 import HostDashboard from './components/HostDashboard/hostDashboard';
 import { useSocket } from './utils/soc';
+import { useEffect } from 'react';
+import { sideBarStore } from './stores/sideBarStore';
 
 function AppContent() {
 
-   useSocket(); 
+  useSocket(); 
+
+  useEffect(() => {
+    window.electronApi.invokeOpenDir(() => {
+      if(!sideBarStore.getState().isOpen) 
+        sideBarStore.getState().toggle()
+      sideBarStore.getState().setAcitveTab('open')
+      console.log('hi')
+    })
+  })
 
   return (
     <>

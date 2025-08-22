@@ -26,17 +26,10 @@ export const MenuTemplate = (mainWindow: BrowserWindow): MenuItemConstructorOpti
       label: 'File',
       submenu: [
         {
-          label: 'New File',
-          accelerator: 'CmdOrCtrl+N',
-          click: () => {
-            mainWindow.webContents.send('menu-new-file');
-          },
-        },
-        {
-          label: 'Open File...',
+          label: 'Open Folder',
           accelerator: 'CmdOrCtrl+O',
           click: () => {
-            mainWindow.webContents.send('menu-open-file');
+            mainWindow.webContents.send('menu-open-folder');
           },
         },
         {
@@ -87,13 +80,6 @@ export const MenuTemplate = (mainWindow: BrowserWindow): MenuItemConstructorOpti
           accelerator: 'CmdOrCtrl+B',
           click: () => {
             mainWindow.webContents.send('menu-toggle-sidebar');
-          },
-        },
-        {
-          label: 'Toggle Terminal',
-          accelerator: 'CmdOrCtrl+K',
-          click: () => {
-            mainWindow.webContents.send('menu-toggle-terminal');
           },
         },
         {
