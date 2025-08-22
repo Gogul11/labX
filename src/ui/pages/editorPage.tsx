@@ -50,7 +50,10 @@ const EditorPage = () => {
                     const res: boolean = await window.electronApi.saveSelectedFile(path, entry.data);
                     console.log(path, entry);
 
-                    if (res) console.log("success");
+                    if (res) {
+                        console.log("success");
+                        alert("File Saved")
+                    }
                     else console.log("fail");
                 }
             };
@@ -71,7 +74,10 @@ const EditorPage = () => {
                 for(const val in openedFiles){
                     console.log(openedFiles[val])
                     const res: boolean = await window.electronApi.saveSelectedFile(openedFiles[val], EditorMapsStore.getState().openedEditors[openedFiles[val]].data);
-                     if (res) console.log("success");
+                     if (res) {
+                        console.log("success");
+                        alert("Files Saved")
+                    }
                     else console.log("fail");
                 }
                 ModifiedFileStore.getState().clearFiles()

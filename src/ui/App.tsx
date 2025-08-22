@@ -14,9 +14,16 @@ function AppContent() {
       if(!sideBarStore.getState().isOpen) 
         sideBarStore.getState().toggle()
       sideBarStore.getState().setAcitveTab('open')
-      console.log('hi')
     })
-  })
+  }, [])
+
+  useEffect(() => {
+    window.electronApi.openSideBar(() => {
+      sideBarStore.getState().toggle()
+      sideBarStore.getState().setAcitveTab('files')
+      console.log(sideBarStore.getState().isOpen)
+    })
+  }, [])
 
   return (
     <>

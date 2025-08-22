@@ -82,33 +82,33 @@ export const MenuTemplate = (mainWindow: BrowserWindow): MenuItemConstructorOpti
             mainWindow.webContents.send('menu-toggle-sidebar');
           },
         },
-        {
-          label: 'Color Theme',
-          submenu: [
-            {
-              label: 'Light',
-              type: 'radio',
-              click: () => {
-                mainWindow.webContents.send('theme-change', 'light');
-              },
-            },
-            {
-              label: 'Dark',
-              type: 'radio',
-              click: () => {
-                mainWindow.webContents.send('theme-change', 'dark');
-              },
-            },
-            {
-              label: 'System',
-              type: 'radio',
-              checked: true,
-              click: () => {
-                mainWindow.webContents.send('theme-change', 'system');
-              },
-            },
-          ],
-        },
+        // {
+        //   label: 'Color Theme',
+        //   submenu: [
+        //     {
+        //       label: 'Light',
+        //       type: 'radio',
+        //       click: () => {
+        //         mainWindow.webContents.send('theme-change', 'light');
+        //       },
+        //     },
+        //     {
+        //       label: 'Dark',
+        //       type: 'radio',
+        //       click: () => {
+        //         mainWindow.webContents.send('theme-change', 'dark');
+        //       },
+        //     },
+        //     {
+        //       label: 'System',
+        //       type: 'radio',
+        //       checked: true,
+        //       click: () => {
+        //         mainWindow.webContents.send('theme-change', 'system');
+        //       },
+        //     },
+        //   ],
+        // },
         { type: 'separator' as const },
         { role: 'reload' as const },
         { role: 'forceReload' as const },

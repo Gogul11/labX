@@ -30,6 +30,7 @@ export interface apiType {
     readZipContent : (zipFilePath : string) => Promise<Blob>,
 
     invokeOpenDir : (func : () => void) => void,
+    openSideBar : (func : () => void) => void
 }
 
 declare global {

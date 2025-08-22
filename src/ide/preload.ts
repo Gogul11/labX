@@ -37,5 +37,7 @@ contextBridge.exposeInMainWorld('electronApi', {
 
     readZipContent : (zipFilePath : string) => ipcRenderer.invoke('read-zip-file', zipFilePath) ,
 
-    invokeOpenDir : (func : () => void) => ipcRenderer.on('menu-open-folder', (_event) => func()) 
+    invokeOpenDir : (func : () => void) => ipcRenderer.on('menu-open-folder', (_event) => func()),
+
+    openSideBar : (func : () => void) => ipcRenderer.on('menu-toggle-sidebar', (_event) => func())
 })
