@@ -29,7 +29,7 @@ const BottomBar = () => {
         <BsCollection size={24} className={activeTab === "files" ? "text-yellow-300" : ""} />
       </button>
 
-      <button className="cursor-pointer" onClick={() => handleTabClick(activeTab !== ' ' ? activeTab : "connect")}>
+      <button className="cursor-pointer" onClick={() => handleTabClick("connect")}>
         <VscVmConnect size={24} className={activeTab === "connect" || activeTab === "connectClient" || activeTab === "connectHost" ? "text-yellow-300" : ""} />
       </button>
 

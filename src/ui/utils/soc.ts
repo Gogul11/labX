@@ -33,11 +33,6 @@ export function useSocket() {
       setMessages(repMsg);
       console.log(repMsg, regNoStore.getState().regNo)
     });
-
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
   }, [ipStore.getState().ip, messages]);
 
   return socketRef;

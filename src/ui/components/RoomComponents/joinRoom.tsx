@@ -77,6 +77,12 @@ const JoinRoomForm: React.FC = () => {
           regNoStore.getState().setRegNo(formData.regNo)
       })
 
+      soc.on('rejoin-failed', ({message}) => {
+        setLoader(true)
+        window.alert(message)
+        setLoader(false)
+      })
+
       soc.on('join-failed', ({message}) => {
           setLoader(true)
           window.alert(message + "\nTry to Rejoin or Contact Teacher")
