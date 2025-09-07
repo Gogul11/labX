@@ -52,6 +52,12 @@ const darkTheme = {
                 }
             }
         }
+    },
+    room : {
+        bg : '#ffffff1a',
+        buttonActive : '#007acc',
+        buttonNotActive : '#0098ff',
+        text : '#ffffff'
     }
 }
 
@@ -109,6 +115,12 @@ const lightTheme = {
                 }
             }
         }
+    },
+    room : {
+        bg : '#ffffff1a',
+        buttonActive : '#0098ff',
+        buttonNotActive : '#007acc',
+        text : '#cccccc'
     }
 }
 
