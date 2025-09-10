@@ -93,6 +93,16 @@ const darkTheme = {
         border : '#ffffff1a',
         inputBg : '#ffffff1a',
         sendBg : '#007acc80'
+    },
+    download : {
+        text : '#ffffff',
+        button : {
+                text : '#ffffff',
+                bg : '#007acc80',
+                bg2 : '#007acc'
+        },
+        border : '#ffffff1a',
+        text2 : '#cccccc'
     }
 }
 const lightTheme = {
