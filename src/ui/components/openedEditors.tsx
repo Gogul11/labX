@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { EditorMapsStore } from '../../stores/editorsMap';
-import { ActivePathStore } from '../../stores/activePathStore';
-import { ModifiedFileStore } from '../../stores/modifiedFileStore';
+import { EditorMapsStore } from '../stores/editorsMap';
+import { ActivePathStore } from '../stores/activePathStore';
+import { ModifiedFileStore } from '../stores/modifiedFileStore';
+import { currentStyle } from '../utils/styleChooser';
 
 
 type openedEditorsObjectType = {
@@ -33,13 +34,18 @@ const OpenedEditorsBar: React.FC<OpenedEditorsBarProps> = ({ editors}) => {
   }, [editors])
   
   return (
-    <div className="w-full bg-blue-950 h-full overflow-x-scroll whitespace-nowrap flex items-center px-2 space-x-2 hide-scrollbar">
+    <div 
+      className="w-full h-full overflow-x-scroll whitespace-nowrap flex items-center  space-x-[1px] hide-scrollbar"
+      style={{backgroundColor : currentStyle('bottomBar.bg')}}
+    >
       {Object.entries(editors).map(([path, val]) => (
         <div
           key={path}
-          className={`flex items-center px-3 py-1 rounded-md cursor-pointer text-sm text-white
-            ${val.isOpen ? 'bg-indigo-800' : 'hover:bg-blue-900'}
-          `}
+          className="flex items-center px-3 py-1 h-full cursor-pointer text-sm"
+          style={{
+            backgroundColor : val.isOpen ? currentStyle('bottomBar.componentActive') : currentStyle('bottomBar.componentBg'),
+            color : currentStyle('bottomBar.text')
+          }}
           onClick={() => {
             tooggleOpenedEditors(path)
             ActiveEditorPath(path)
@@ -48,10 +54,10 @@ const OpenedEditorsBar: React.FC<OpenedEditorsBarProps> = ({ editors}) => {
         >
           <span>
             {editorNames[path]}
-            {/* {file.isModified && <span className="text-red-400 ml-1">*</span>} */}
           </span>
           <span
-            className="ml-2 file-close text-white hover:text-gray-300"
+            className="ml-2 file-close text-lg"
+            style={{color : currentStyle('bottomBar.crossIcon')}}
             onClick={(e) => {
               e.stopPropagation();
               deleteEditors(path)

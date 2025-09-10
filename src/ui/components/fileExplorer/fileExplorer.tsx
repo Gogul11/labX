@@ -6,9 +6,9 @@ import { BiSend } from "react-icons/bi";
 import { dirStore } from '../../stores/directoryStore';
 import { dirListStore } from '../../stores/dirListStore';
 import { selectedPathStore } from '../../stores/selectedPathStore';
-import { EditorMapsStore } from '../../stores/editorsMap';
 import Loader from '../loader';
 import { sideBarStore } from '../../stores/sideBarStore';
+import { currentStyle } from '../../utils/styleChooser';
 // import { sideBarStore } from '../../stores/sideBarStore';
 
 type FileNode = {
@@ -181,12 +181,12 @@ useEffect(() => {
 	nodes.map((node) => (
 		<div
 			key={node.path}
-			style={{ paddingLeft: level + 16 }}
-			className={`
-				group transition-all duration-150 rounded-sm
-				${EditorMapsStore.getState().openedEditors[node.path]?.isOpen ? 'bg-[#3e4451] text-[#abb2bf]' : ''}
-				${node.isDir ? 'text-[#61afef]' : 'text-[#e5c07b]'}
-			`}
+			style={{ 
+				paddingLeft: level + 5,
+				color : currentStyle('fileExplorer.afterOpen.files.item.text')
+			}}
+			
+			className="group transition-all duration-150"
 		>
 			<Content 
 				isDir={node.isDir}
@@ -228,16 +228,19 @@ useEffect(() => {
 	}, [])
 
 return (
-	<div className="h-full w-full bg-[#282c34] text-[#abb2bf]">
+	<div 
+		className="h-full w-full"
+	>
 
 		{/* TO open a folder */}
 		{(dir === null || dir === '') ? 
 			<div className='h-full flex flex-col gap-8 items-center justify-center'>
-				<p
-					className='text-[#c678dd] text-center font-bold max-w-[50%]'
-				>You have not opened a folder, open a folder</p>
 				<button
-					className='bg-[#e06c75] w-[70%] h-10 rounded-lg text-[#282c34] font-bold'
+					className='w-[70%] h-10 rounded-sm cursor-pointer'
+					style={{
+						color : currentStyle('fileExplorer.beforeOpen.button.text'),
+						backgroundColor : currentStyle('fileExplorer.beforeOpen.button.bg')
+					}}
 					onClick={() => {
 						window.electronApi.openDir().then((d) => {
 							globalDir(d)
@@ -264,14 +267,20 @@ return (
 					<div id='create-id' className='h-8 flex items-center gap-2 px-4 mt-6'>
 						<VscFolderOpened
 							size={22}
-							className=' text-[#98c379] cursor-pointer hover:text-[#c678dd]'
+							className='cursor-pointer'
+							style={{color : currentStyle('fileExplorer.afterOpen.icons.color')}}
+							onMouseEnter={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.hover')}
+							onMouseLeave={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.color')}
 							onClick={() => {
 								sideBarStore.getState().setAcitveTab('open')
 							}}
 						/>
 						<VscNewFile 
 							size={22} 
-							className=' text-[#98c379] cursor-pointer hover:text-[#c678dd]'
+							className='cursor-pointer'
+							style={{color : currentStyle('fileExplorer.afterOpen.icons.color')}}
+							onMouseEnter={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.hover')}
+							onMouseLeave={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.color')}
 							onClick={() => {
 								setInput({...input, type : 'File'})
 								setShowInput(true)
@@ -279,7 +288,10 @@ return (
 						/>
 						<VscNewFolder 
 							size={22}  
-							className=' text-[#98c379] cursor-pointer hover:text-[#c678dd]'
+							className='cursor-pointer'
+							style={{color : currentStyle('fileExplorer.afterOpen.icons.color')}}
+							onMouseEnter={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.hover')}
+							onMouseLeave={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.color')}
 							onClick={() => {
 									setInput({...input, type : 'Directory'})
 									setShowInput(true)
@@ -291,7 +303,12 @@ return (
 								<input 
 									type="text" 
 									value={showInput ? input.val : renameInput}
-									className="bg-[#3e4451] px-2 py-1 border border-[#c678dd] rounded-sm w-[97%] text-white outline-none"
+									className="px-2 py-1 border rounded-sm w-[97%] outline-none"
+									style={{
+										borderColor : currentStyle('fileExplorer.afterOpen.input.border'),
+										backgroundColor : currentStyle('fileExplorer.afterOpen.input.bg'),
+										color : currentStyle('fileExplorer.afterOpen.input.text')
+									}}
 									onChange={(e) => {
 										if(showInput) setInput({...input, val: e.target.value})
 										if(rename) setRenameInput(e.target.value)
@@ -306,7 +323,10 @@ return (
 
 								<BiSend
 									size={22}
-									className=' text-[#98c379] cursor-pointer hover:text-[#c678dd]'
+									className='cursor-pointer'
+									style={{color : currentStyle('fileExplorer.afterOpen.icons.color')}}
+									onMouseEnter={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.hover')}
+									onMouseLeave={e => e.currentTarget.style.color = currentStyle('fileExplorer.afterOpen.icons.color')}
 									onClick={() => {
 										if(showInput)
 											handleCreation()

@@ -53,9 +53,6 @@ const ClientFolderView: React.FC<Props> = ({ client }) => {
       soc.on('student-folder-found', handleFolderFound);
     }
 
-    return () => {
-      soc.disconnect();
-    };
   }, [client, client?.zippedPath]);
 
   const refresh = (newPath = folderPath) => {

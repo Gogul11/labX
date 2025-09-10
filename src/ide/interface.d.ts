@@ -27,7 +27,10 @@ export interface apiType {
 
     startServer : (roomId : string, roomName : string, portNo : string, storageDir : string) => Promise<boolean>,
 
-    readZipContent : (zipFilePath : string) => Promise<Blob>
+    readZipContent : (zipFilePath : string) => Promise<Blob>,
+
+    invokeOpenDir : (func : () => void) => void,
+    openSideBar : (func : () => void) => void
 }
 
 declare global {

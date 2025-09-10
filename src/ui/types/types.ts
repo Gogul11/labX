@@ -4,7 +4,7 @@ export interface Client {
   regNo: string;
   startTime: string;
   endTime ?: string
-  status : 'active' | 'ended';
+  status : 'active' | 'ended' | 'disconnected';
   zippedPath ?: string;
 }
 

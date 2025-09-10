@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import LabXEditor from '../components/editor';
-import OpenedEditors from '../components/opened/openedEditors';
+import OpenedEditors from '../components/openedEditors';
 import WelcomeScreen from './welcomePage';
 import { sideBarStore } from '../stores/sideBarStore';
 import { currentPathStore } from '../stores/currentPathStore';
@@ -17,7 +17,7 @@ const EditorPage = () => {
     useSocket(); 
     
     //stores
-    const toogleSideBar = sideBarStore((state) => state.toggle)
+    // const toogleSideBar = sideBarStore((state) => state.toggle)
     const isSideBarOpen = sideBarStore((state) => state.isOpen)
 
     //selectedPath store 
@@ -50,7 +50,10 @@ const EditorPage = () => {
                     const res: boolean = await window.electronApi.saveSelectedFile(path, entry.data);
                     console.log(path, entry);
 
-                    if (res) console.log("success");
+                    if (res) {
+                        console.log("success");
+                        alert("File Saved")
+                    }
                     else console.log("fail");
                 }
             };
@@ -71,7 +74,10 @@ const EditorPage = () => {
                 for(const val in openedFiles){
                     console.log(openedFiles[val])
                     const res: boolean = await window.electronApi.saveSelectedFile(openedFiles[val], EditorMapsStore.getState().openedEditors[openedFiles[val]].data);
-                     if (res) console.log("success");
+                     if (res) {
+                        console.log("success");
+                        alert("Files Saved")
+                    }
                     else console.log("fail");
                 }
                 ModifiedFileStore.getState().clearFiles()
@@ -85,10 +91,6 @@ const EditorPage = () => {
     return (
         <div className="flex h-screen w-screen">
 
-
-                <div className={`h-[96%] ${isSideBarOpen && 'w-[20%]'}`}>
-                    {isSideBarOpen && <SideBar />}
-                </div>
                 {Object.entries(openedEditors).length === 0 ? 
                         <div className={`h-[96%] ${isSideBarOpen ? 'w-[80%]' : 'w-full'}`}>
                             <WelcomeScreen/>
@@ -97,7 +99,7 @@ const EditorPage = () => {
                         Object.entries(openedEditors).map(([path, vals]) => (
                             vals.isOpen && 
                             <div className={`h-[96%] ${isSideBarOpen ? 'w-[80%]' : 'w-full'}`}>
-                                <LabXEditor theme="vs-dark"
+                                <LabXEditor
                                     key={path} 
                                     value={vals.data}
                                     ext={vals.ext}
@@ -107,12 +109,15 @@ const EditorPage = () => {
                             </div>
                         ))
                 )}
-                <div className='h-[4%] flex w-full absolute bottom-0 border bg-blue-950'>
-                    <div className='w-[20%]'>
-                        <BottomBar/>
-                    </div>
+                <div className={`h-[96%] ${isSideBarOpen && 'w-[20%]'}`}>
+                    {isSideBarOpen && <SideBar />}
+                </div>
+                <div className='h-[4%] flex w-full absolute bottom-0 border'>
                     <div className='w-[80%] h-full hide-scrollbar '>
                          <OpenedEditors editors={openedEditors}/> 
+                    </div>
+                    <div className='w-[20%]'>
+                        <BottomBar/>
                     </div>
                 </div>
         </div>

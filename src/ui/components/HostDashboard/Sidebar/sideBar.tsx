@@ -10,7 +10,7 @@ interface Client {
   regNo: string;
   startTime: string;
   endTime ?: string
-  status : 'active' | 'ended',
+  status : 'active' | 'ended' | 'disconnected',
   zippedPath ?: string
 }
 
@@ -56,9 +56,6 @@ const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
       })
     });
 
-    return () => {
-      soc.disconnect();
-    };
   }, []);
 
   const formatTime = (dateString: string) => {
@@ -152,7 +149,7 @@ const Sidebar: React.FC<sideBarProps> = ({setClient}) => {
         {filteredClients.map((client) => (
           <div
             key={client.id}
-            className={`client-item ${selectedClientId === client.id ? 'active' : ''}`}
+            className={`client-item ${selectedClientId === client.id ? 'active' : ''} ${client.status === 'disconnected' && 'bg-red-500/20'}`}
             onClick={() => handleStudentOnClick(client)}
           >
             <div className="client-info">

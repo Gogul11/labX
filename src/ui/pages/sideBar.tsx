@@ -6,8 +6,9 @@ import { selectedPathStore } from '../stores/selectedPathStore';
 import { dirStore } from '../stores/directoryStore';
 import { sideBarStore } from '../stores/sideBarStore';
 import  Download from '../components/Download'
-import Timer from "../components/Timer";
-import TodoList from "../components/Todo";
+import { colorThemeStore } from "../stores/ThemeStore";
+import { darkTheme, lightTheme } from "../utils/colors";
+import {currentStyle} from "../utils/styleChooser.ts";
 
 const SideBar = () => {
 
@@ -15,6 +16,7 @@ const SideBar = () => {
   const setActiveTab = sideBarStore((state) => state.setAcitveTab)
   const setSelectedPath = selectedPathStore((state) => state.setSelectedPath)
   const globalDir = dirStore((state) => state.setDir)
+  const theme = colorThemeStore((state) => state.theme)
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -42,21 +44,23 @@ const SideBar = () => {
         return <Room tab="host"/>
       case 'download':
         return <Download/>
-      case 'todo':
-        return <TodoList/>
-      case 'timer':
-          return <Timer/>
       default:
         return null;
     }
   };
 
   return (
-    <div className="w-full h-full bg-[#282c34] shadow-lg flex flex-col items-center relative">
+    <div
+        className="w-full h-full shadow-lg flex flex-col items-center relative border-l-2"
+        style={{borderColor : currentStyle('sideBar.border')}}
+    >
 
       
       <button
-        onClick={sideBarStore.getState().toggle}
+        onClick={() => {
+          sideBarStore.getState().toggle()
+          sideBarStore.getState().setAcitveTab(' ')
+        }}
         title="Close Sidebar"
         className="absolute top-2 right-2 text-white hover:text-red-500 transition-all"
       >
@@ -64,7 +68,10 @@ const SideBar = () => {
       </button>
 
       {/* Dynamic content area */}
-      <div className="bg-[#282c34]/50 h-[95%] w-[96%] overflow-y-auto hide-scrollbar m-2">
+      <div 
+        className="h-full w-full overflow-y-auto"
+		    style={{backgroundColor : theme === "dark" ? darkTheme.sideBar.bg : lightTheme.sideBar.bg}}
+      >
         {renderTabContent()}
       </div>
     </div>

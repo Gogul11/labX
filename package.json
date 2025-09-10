@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "main": "dist-ide/main.js",
+  "author": {
+    "name": "Your Name",
+    "email": "you@example.com"
+  },
   "scripts": {
     "dev": "npm-run-all --parallel dev:*",
     "dev:ui": "vite",

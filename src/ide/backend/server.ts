@@ -39,20 +39,29 @@ export const startServer = (
 
     const joinedStudentsList = new Map<
             string,
-            { name: string; rollNo: string; startTime: Date; endTime?: Date, status : "active" | "ended", zippedPath ?: string }
+            { name: string; rollNo: string; startTime: Date; endTime?: Date, status : "active" | "ended" | "disconnected", zippedPath ?: string }
             >();
 
     const broadcastedFiles : FileData[]= [];
     
     io.on('connection', (socket) => {
         console.log(socket.id)
+
+        //admin-join
+        socket.on('admin-join', () => {
+            adminSocketId = socket.id
+            socket.join('admin-room')
+            console.log("Admin joined:", socket.id);
+        })
+
         //Student-join
         socket.on('join', ({name, regNo, roomId}) => {
             if(roomId !== currentRoomId){
                 socket.disconnect(true)
                 return
             }
-
+            socket.data.regNo = regNo;
+            
             if(!joinedStudentsList.has(regNo)){
                 console.log(name, regNo, roomId, socket.id)
                 joinedStudentsList.set(regNo, {
@@ -61,6 +70,31 @@ export const startServer = (
                     startTime : new Date(),
                     status : "active"
                 })
+            }
+            else {
+                const rejoinStud = joinedStudentsList.get(regNo)
+                if(rejoinStud){
+                    if(rejoinStud?.status === 'ended'){
+                        socket.emit('rejoin-failed', { message: "You cannot rejoin after ending the session." })
+                        console.log('rejoin failed')
+                        socket.disconnect(true)
+                        return;
+                    }
+                    else{
+                        rejoinStud.status = "active";
+                        joinedStudentsList.set(regNo, rejoinStud)
+                        console.log("stud-rejoined", rejoinStud);
+                        socket.to('admin-room').emit('joined-studs', 
+                        Array.from(joinedStudentsList.entries())
+                        .map(([regNo , student]) => ({
+                            regNo : regNo,
+                            name : student.name,
+                            startTime : student.startTime,
+                            endTime : student.endTime,
+                            status : student.status
+                        })))
+                    }   
+                }
             }
 
             if(adminSocketId){
@@ -140,17 +174,35 @@ export const startServer = (
 
         })
         
-        //admin-join
-        socket.on('admin-join', () => {
-            adminSocketId = socket.id
-            socket.join('admin-room')
-            console.log("Admin joined:", socket.id);
+        
+
+        socket.on('disconnect', (_reason) => {
+            const regNo = socket.data.regNo;
+            console.log(regNo)
+            if(!regNo) return;
+
+            const stud = joinedStudentsList.get(regNo)
+            if(stud){
+                if(stud.status !== 'ended'){
+                    stud.status = 'disconnected',
+                    joinedStudentsList.set(regNo, stud)
+                    socket.to('admin-room').emit('joined-studs', 
+                    Array.from(joinedStudentsList.entries())
+                    .map(([regNo , student]) => ({
+                        regNo : regNo,
+                        name : student.name,
+                        startTime : student.startTime,
+                        endTime : student.endTime,
+                        status : student.status
+                    })))
+                    console.log(`${regNo} has disconnected`);
+                }
+            }
         })
-        // socket.on('disconnect')
     })
 
 
-    //test for development
+    //test for develop10.16.32.194ment
     app.get("/test", (_req : Request, res : Response) => {
         console.log(joinedStudentsList)
         res.status(200).json({test : "success"})

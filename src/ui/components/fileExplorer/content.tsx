@@ -4,6 +4,8 @@ import { currentPathStore } from "../../stores/currentPathStore";
 import { ActivePathStore } from "../../stores/activePathStore";
 import { ModifiedFileStore } from "../../stores/modifiedFileStore";
 import { welcomePageStore } from "../../stores/welcomePageStore";
+import { currentStyle } from "../../utils/styleChooser";
+import { EditorMapsStore } from "../../stores/editorsMap";
 
 type FileNode = {
     name: string;
@@ -19,7 +21,7 @@ const Content = (props : FileNode) => {
     const activeStore = ActivePathStore((state) => state.setPath)
 
     return (
-        <div className='hover:bg-[#abb2bf]/10 cursor-pointer w-full' 
+        <div className='cursor-pointer w-full' 
             onClick={() => {
                     props.select({val : props.path, isDir : props.isDir})
                     !props.isDir && selectedPath(props.path)
@@ -31,15 +33,27 @@ const Content = (props : FileNode) => {
                 if(e.button === 2)
                     props.select({val : props.path, isDir : props.isDir})
             }}
+            style={{
+				backgroundColor : EditorMapsStore.getState().openedEditors[props.path]?.isOpen ? currentStyle('fileExplorer.afterOpen.files.active') : '',
+            }}
+            onMouseEnter={e => e.currentTarget.style.backgroundColor = currentStyle('fileExplorer.afterOpen.files.hover')}
+			onMouseLeave={e => e.currentTarget.style.backgroundColor =  
+								EditorMapsStore.getState().openedEditors[props.path]?.isOpen ? currentStyle('fileExplorer.afterOpen.files.active') : ''
+						}
         >
             <div 
                 className="flex w-[80%] min-h-6 mx-2 gap-2 items-center py-2"
                 onClick={props.toogle}
             >
-                <div className="flex-shrink-0">
+                <div 
+                    className="flex-shrink-0"
+                    style={{
+                        color : props.isDir ? currentStyle('fileExplorer.afterOpen.files.icons.folder') : currentStyle('fileExplorer.afterOpen.files.icons.file')
+                    }}
+                >
                     {props.isDir ? <FaFolderClosed size={20}/> : <FaFileCode size={20}/>} 
                 </div>
-                <span className={props.isDir ? "text-[#c678dd]" : "text-[#98c379]"}>{props.name}</span>
+                <span>{props.name}</span>
             </div>        
         </div>
     );
