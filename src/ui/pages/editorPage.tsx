@@ -96,7 +96,7 @@ const EditorPage = () => {
                         <div className={`h-[96%] ${isSideBarOpen ? 'w-[80%]' : 'w-full'}`}>
                             {pageStore.getState().page === "welcome"  &&  <WelcomeScreen/>}
                         </div>
-                    : Object.entries(openedEditors).length === 0 && (
+                    : Object.entries(openedEditors).length !== 0 && (
                         Object.entries(openedEditors).map(([path, vals]) => (
                             vals.isOpen && 
                             <div className={`h-[96%] ${isSideBarOpen ? 'w-[80%]' : 'w-full'}`}>
