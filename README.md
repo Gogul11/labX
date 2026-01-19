@@ -1,4 +1,4 @@
-# LAN-Based Lab Assessment IDE
+# ORCA - LAN-Based Lab Assessment IDE
 
 A **cross-platform desktop IDE for lab assessments** that works entirely within a **Local Area Network (LAN)**. Teachers can host assessment rooms, collect student project directories, evaluate submissions, assign marks, share reference materials, and communicate via chat — all offline.
 
@@ -101,4 +101,5 @@ Built using **Electron.js, Node.js, React, and TypeScript**.
 - Plagiarism detection
 - Encryption for submissions
   
+
 
